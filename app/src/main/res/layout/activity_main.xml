@@ -9,8 +9,51 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.naosim.rpgsample.MainActivity">
 
-    <TextView
+    <Button
+        android:text="やくそう"
+        android:id="@+id/yakusouButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_alignParentBottom="true"
+        />
+
+
+    <TextView
+        android:textColor="#fff"
+        android:background="#000"
+        android:padding="4dp"
+        android:id="@+id/text"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="160dp" />
+
+    <TextView
+        android:text="▼"
+        android:textColor="#fff"
+        android:id="@+id/nextIcon"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_above="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <Button
+            android:text="黒ヤギと話す"
+            android:id="@+id/charaKuro"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+        <Button
+            android:text="白ヤギと話す"
+            android:id="@+id/charaSiro"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
 </RelativeLayout>
