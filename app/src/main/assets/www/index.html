@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<style>
+* {
+    margin: 0px;
+    padding: 0px;
+}
+</style>
+
+<script src="./js/enchant/enchant.js"></script>
+
+<h1>hello</h1>
+downButtonStatus: <span id="downButtonStatus"></span>
+
+<script>
+var chara1 = './img/enchant/chara1.png';
+var mapAssetName = './img/enchant/map0_0.png';
+
+enchant(); // initialize
+var game = new Core(320, 320);
+game.preload([chara1, mapAssetName]);
+game.fps = 20;
+
+var baseMap = new Map(16, 16);
+game.onload = function(){
+    baseMap.image = game.assets[mapAssetName];
+    baseMap.loadData([[1, 2]]);
+    game.rootScene.addChild(baseMap);
+
+    var bear = new Sprite(32, 32);
+    bear.image = game.assets[chara1];
+    game.rootScene.addChild(bear);
+    bear.frame = [6, 6, 7, 7];   // select sprite frame
+
+    var movingDiff = {x:0, y:0};
+    bear.addEventListener('enterframe',function(){ //イベントリスナーを追加する
+        if(this.x % 16 !== 0) {
+          this.x+=movingDiff.x;
+        } else {
+          if(buttonStatus.right == 'down') {
+            movingDiff.x = 4;
+            this.x+=movingDiff.x;
+          } else if(buttonStatus.left == 'down') {
+            movingDiff.x = -4;
+            this.x+=movingDiff.x;
+          }
+        }
+
+        if(this.y % 16 !== 0) {
+          this.y+=movingDiff.y;
+        } else {
+
+          if(buttonStatus.down == 'down') {
+            movingDiff.y = 4;
+            this.y+=movingDiff.y;
+          } else if(buttonStatus.up == 'down') {
+            movingDiff.y = -4;
+            this.y+=movingDiff.y;
+          }
+        }
+
+    });
+};
+
+game.start(); // start your game!
+</script>
+
+
+<script>
+var fromNative = {}
+var buttonStatus = {
+  up: 'up',
+  down: 'up',
+  left: 'up',
+  right: 'up',
+}
+var map = {}
+
+fromNative.getPosition = function() {
+  return "aaa,10,20";
+}
+fromNative.onButtonDown = function(arrowButtonType) {
+  buttonStatus[arrowButtonType] = 'down';
+  document.querySelector('#downButtonStatus').innerHTML = buttonStatus.down;
+}
+fromNative.onButtonUp = function(arrowButtonType) {
+  buttonStatus[arrowButtonType] = 'up';
+  document.querySelector('#downButtonStatus').innerHTML = buttonStatus.down;
+}
+
+fromNative.gotoPosition = function(arg) {
+  document.querySelector('#downButtonStatus').innerHTML = `${arg.fieldName}, ${arg.x}, ${arg.y}`;
+}
+
+fromNative.updateFieldLayer = function(arg) {
+  var fieldName = arg.fieldName;
+  var fieldLayerName = arg.fieldLayerName;
+  var fieldData = arg.fieldData;
+  if(!map[fieldName]) map[fieldName] = {}
+  if(!map[fieldName][fieldLayerName]) map[fieldName][fieldLayerName] = {}
+  map[fieldName][fieldLayerName] = fieldData;
+  baseMap.loadData(map[fieldName][fieldLayerName]);
+  document.querySelector('#downButtonStatus').innerHTML = arg.fieldData[0];
+}
+</script>
