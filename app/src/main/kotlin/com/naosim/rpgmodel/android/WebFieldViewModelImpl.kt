@@ -2,6 +2,7 @@ package com.naosim.rpgmodel.android
 
 import android.util.Log
 import android.webkit.WebView
+import com.naosim.rpgmodel.lib.value.field.*
 import com.naosim.rpgmodel.lib.viewmodel.*
 import org.json.JSONArray
 import org.json.JSONObject
