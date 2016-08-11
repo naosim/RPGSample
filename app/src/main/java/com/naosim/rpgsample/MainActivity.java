@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.naosim.rpgmodel.android.ItemSelectorViewModelImpl;
+import com.naosim.rpgmodel.android.MessageViewModelImpl;
 import com.naosim.rpgmodel.android.WebFieldViewModelImpl;
 import com.naosim.rpgmodel.lib.script.MessageScriptController;
 import com.naosim.rpgmodel.lib.value.ItemSet;
