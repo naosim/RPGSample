@@ -1,65 +1,184 @@
 <!DOCTYPE html>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=320,initial-scale=1">
 <style>
 * {
     margin: 0px;
     padding: 0px;
+    color: #fff;
+}
+#enchant-stage {
+  width:320px;
+  height:320px;
+}
+body {
+  background: #000;
 }
 </style>
 
 <script src="./js/enchant/enchant.js"></script>
-
-<h1>hello</h1>
 downButtonStatus: <span id="downButtonStatus"></span>
+<div id="enchant-stage"></div>
 
 <script>
-var chara1 = './img/enchant/chara1.png';
+var chara1 = './img/enchant/chara0.png';
 var mapAssetName = './img/enchant/map0_0.png';
+
+var walkSpeed = 4;
+
+var Player = function(game) {
+  var bear = new Sprite(32, 32);
+  bear.image = game.assets[chara1];
+
+  bear.frame = [1,1,2,2,1,1,0,0];   // select sprite frame
+  var bearCollision = new Sprite(16, 16);
+  bear.collision = { x: 8, y: 16, width: 16, height: 16 }
+  bear.lastPos = {x: 0, y: 0};
+
+  var movingDiff = {x:0, y:0};
+  bear.addEventListener('enterframe',function(){ //イベントリスナーを追加する
+    var pos = getPos();
+    var x = pos.x;
+    var y = pos.y;
+    if(x % 16 !== 0) {
+      x +=movingDiff.x;
+    } else {
+      if(buttonStatus.right == 'down') {
+        movingDiff.x = walkSpeed;
+        x += movingDiff.x;
+      } else if(x != 0 && buttonStatus.left == 'down') {
+        movingDiff.x = -walkSpeed;
+        x += movingDiff.x;
+      }
+    }
+
+    if(y % 16 !== 0) {
+      y += movingDiff.y;
+    } else {
+      if(buttonStatus.down == 'down') {
+        movingDiff.y = walkSpeed;
+        y += movingDiff.y;
+      } else if(y != 0 && buttonStatus.up == 'down') {
+        movingDiff.y = -walkSpeed;
+        y += movingDiff.y;
+      }
+    }
+    setPos(x, y);
+
+    if(x % 16 == 0 && y % 16 == 0) {
+      if(bear.lastPos.x != x || bear.lastPos.y != y) {
+        bear.lastPos.x = x;
+        bear.lastPos.y = y;
+        notifyToNative('position', {fieldName: currentFieldName, x: bear.lastPos.x / 16, y: bear.lastPos.y / 16});
+      }
+    }
+  });
+
+  var getPos = function() {
+    return {
+      x: bear.x + bear.collision.x,
+      y: bear.y + bear.collision.y,
+    }
+  }
+
+  var getLastPos = function() {
+    return {
+      x: bear.lastPos.x,
+      y: bear.lastPos.y,
+    }
+  }
+
+  var setPos = function(x, y) {
+    bear.x = x - bear.collision.x;
+    bear.y = y - bear.collision.y;
+  }
+
+  var resetLastPos = function() {
+    lastPos = {x: -1, y: -1}
+  }
+
+  setPos(0, 0);
+
+  return {
+    sprite: bear,
+    getPos: getPos,
+    getLastPos: getLastPos,
+    setPos: setPos,
+    resetLastPos: resetLastPos
+  }
+}
+
 
 enchant(); // initialize
 var game = new Core(320, 320);
 game.preload([chara1, mapAssetName]);
 game.fps = 20;
 
-var baseMap = new Map(16, 16);
+var MapGroup = function() {
+  var group = new Group();
+  var back =  new Map(16, 16);
+  var front =  new Map(16, 16);
+  group.addChild(back);
+  group.addChild(front);
+    return {
+      group: group,
+      back: back,
+      front: front,
+        // event: new Map(16, 16),
+    }
+}
+
+var mapGroup = MapGroup();
+var player;
+var currentFieldName = 'aaa';
 game.onload = function(){
-    baseMap.image = game.assets[mapAssetName];
-    baseMap.loadData([[1, 2]]);
-    game.rootScene.addChild(baseMap);
+  mapGroup.back.image = mapGroup.front.image = game.assets[mapAssetName];
+  game.rootScene.addChild(mapGroup.group);
 
-    var bear = new Sprite(32, 32);
-    bear.image = game.assets[chara1];
-    game.rootScene.addChild(bear);
-    bear.frame = [6, 6, 7, 7];   // select sprite frame
 
-    var movingDiff = {x:0, y:0};
-    bear.addEventListener('enterframe',function(){ //イベントリスナーを追加する
-        if(this.x % 16 !== 0) {
-          this.x+=movingDiff.x;
-        } else {
-          if(buttonStatus.right == 'down') {
-            movingDiff.x = 4;
-            this.x+=movingDiff.x;
-          } else if(buttonStatus.left == 'down') {
-            movingDiff.x = -4;
-            this.x+=movingDiff.x;
+  player = Player(game);
+  mapGroup.group.addChild(player.sprite);
+
+  var last = {
+    up: false,
+    down: false,
+    left: false,
+    right: false
+  }
+  this.addEventListener('enterframe',function(){
+    //ブラウザテスト用
+    var run = function(key) {
+      if(game.input[key] != last[key]) {
+          if(game.input[key]) {
+            fromNative.onButtonDown(key);
+            // console.log(key);
+          } else {
+            fromNative.onButtonUp(key);
           }
-        }
+      }
 
-        if(this.y % 16 !== 0) {
-          this.y+=movingDiff.y;
-        } else {
+      // カメラ位置
+      var p = player.getPos();
+      var x = Math.min(-p.x, 0) + (game.width - 16) / 2;
+      var y = Math.min(-p.y, 0) + (game.height - 16) / 2;
+      mapGroup.group.x = x;
+      mapGroup.group.y = y;
+      // console.log(x, y);
+    }
+    run('up');
+    run('down');
+    run('left');
+    run('right');
 
-          if(buttonStatus.down == 'down') {
-            movingDiff.y = 4;
-            this.y+=movingDiff.y;
-          } else if(buttonStatus.up == 'down') {
-            movingDiff.y = -4;
-            this.y+=movingDiff.y;
-          }
-        }
+    last.up = game.input.up;
+    last.down = game.input.down;
+    last.left = game.input.left;
+    last.right = game.input.right;
+  });
 
-    });
-};
+  notifyToNative('onload')
+
+};// end onload
 
 game.start(); // start your game!
 </script>
@@ -76,7 +195,8 @@ var buttonStatus = {
 var map = {}
 
 fromNative.getPosition = function() {
-  return "aaa,10,20";
+  var lastPos = player.getLastPos();
+  return {fieldName: currentFieldName, x: lastPos.x / 16, y: lastPos.y / 16}
 }
 fromNative.onButtonDown = function(arrowButtonType) {
   buttonStatus[arrowButtonType] = 'down';
@@ -88,17 +208,55 @@ fromNative.onButtonUp = function(arrowButtonType) {
 }
 
 fromNative.gotoPosition = function(arg) {
-  document.querySelector('#downButtonStatus').innerHTML = `${arg.fieldName}, ${arg.x}, ${arg.y}`;
+  currentFieldName = arg.fieldName;
+  player.resetLastPos();
+  player.setPos(arg.x * 16, arg.y * 16)
+  updateMapDraw();
+}
+
+var updateMapDraw = function() {
+
+
+
+  // console.log("updateMapDraw", currentFieldName);
+  ['back', 'front'].forEach(fieldLayerName => {
+    if(!map[currentFieldName][fieldLayerName]) {
+      mapGroup[fieldLayerName].loadData([[]]);
+      mapGroup[fieldLayerName].collisionData = null;
+      return;
+    }
+    // console.log(fieldLayerName);
+    // clear
+    // mapGroup.front.loadData([[]]);
+    // mapGroupfront.collisionData = null;
+
+    mapGroup[fieldLayerName].loadData(map[currentFieldName][fieldLayerName].data);
+    if(map[currentFieldName][fieldLayerName].collisionData) {
+      mapGroup[fieldLayerName].collisionData = map[currentFieldName][fieldLayerName].collisionData;
+    } else {
+      mapGroup[fieldLayerName].collisionData = map[currentFieldName][fieldLayerName].data.map(a => a.map(b => 0));
+    }
+  });
 }
 
 fromNative.updateFieldLayer = function(arg) {
   var fieldName = arg.fieldName;
   var fieldLayerName = arg.fieldLayerName;
   var fieldData = arg.fieldData;
+  var fieldCollisionData = arg.fieldCollisionData;
   if(!map[fieldName]) map[fieldName] = {}
   if(!map[fieldName][fieldLayerName]) map[fieldName][fieldLayerName] = {}
-  map[fieldName][fieldLayerName] = fieldData;
-  baseMap.loadData(map[fieldName][fieldLayerName]);
-  document.querySelector('#downButtonStatus').innerHTML = arg.fieldData[0];
+  map[fieldName][fieldLayerName].data = fieldData;
+  map[fieldName][fieldLayerName].collisionData = fieldCollisionData;
+
+  updateMapDraw();
 }
+
+var notifyToNative = function(methodName, values) {
+  if(values) {
+    console.log(methodName + '###' + JSON.stringify(values))
+  } else {
+    console.log(methodName + '###')
+  }
+};
 </script>

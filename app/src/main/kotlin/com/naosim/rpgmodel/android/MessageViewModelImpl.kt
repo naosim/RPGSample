@@ -26,7 +26,6 @@ class MessageViewModelImpl(
         val text = message.value.trim { it <= ' ' } + "\n"
         val firstTextCount = textView.text.toString().length
         val data = text.toCharArray()
-
         nextIcon.visibility = View.INVISIBLE
         nextIcon.clearAnimation()
 
@@ -42,9 +41,9 @@ class MessageViewModelImpl(
                         aanim1.repeatCount = Animation.INFINITE
                         aanim1.repeatMode = Animation.REVERSE
                         nextIcon.startAnimation(aanim1)
-
                         onEnd.invoke()
                     }
+                    break
                 }
                 setMessageText(currentText + data[i++ - firstTextCount])
                 try {

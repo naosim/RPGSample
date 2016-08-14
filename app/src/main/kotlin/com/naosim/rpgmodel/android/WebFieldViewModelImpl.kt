@@ -1,27 +1,55 @@
 package com.naosim.rpgmodel.android
 
 import android.util.Log
+import android.webkit.ConsoleMessage
+import android.webkit.WebChromeClient
 import android.webkit.WebView
 import com.naosim.rpgmodel.lib.value.field.*
-import com.naosim.rpgmodel.lib.viewmodel.*
+import com.naosim.rpgmodel.lib.viewmodel.FieldViewModel
+import com.naosim.rpgmodel.lib.viewmodel.FieldViewModelFactory
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.*
 
-class WebFieldViewModelImpl(val webView: WebView): FieldViewModel {
+class WebFieldViewModelImpl(
+        val webView: WebView,
+        override val onload: (FieldViewModel) -> Unit,
+        override val onstep: (FieldViewModel, Position) -> Unit
+): FieldViewModel {
+    init {
+        webView.setWebChromeClient(object : WebChromeClient() {
+            override fun onConsoleMessage(cm: ConsoleMessage): Boolean {
+                if(cm.message().contains("###")) {
+                    Log.e("WebFieldViewModelImpl", cm.message())
+                    val args = cm.message().split("###")
+                    val methodName = args[0]
+
+                    if(methodName == "onload") {
+                        onload.invoke(this@WebFieldViewModelImpl)
+                    } else if(methodName == "position"){
+                        val obj = JSONObject(args[1])
+                        onstep.invoke(this@WebFieldViewModelImpl, Position(
+                                FieldNameImpl(obj.getString("fieldName")),
+                                X(obj.getInt("x")),
+                                Y(obj.getInt("y"))
+                        ))
+                    }
+
+                }
+
+                return true
+            }
+        })
+    }
+
+
     override fun getPosition(callback: (Position) -> Unit) {
-        val v = HashMap<String, String>()
         webView.evaluateJavascript("fromNative.getPosition()") {
-            val args = it.replace("\"", "").split(",")
-            v.put("fieldName", args[0])
-            v.put("x", args[1])
-            v.put("y", args[2])
-
+            val v = JSONObject(it)
             callback.invoke(
                     Position(
-                            FieldName(v.get("fieldName")!!),
-                            X(v.get("x")!!.toInt()),
-                            Y(v.get("y")!!.toInt())
+                            com.naosim.rpgmodel.lib.value.field.FieldNameImpl(v.getString("fieldName")!!),
+                            X(v.getInt("x")),
+                            Y(v.getInt("y"))
                     )
             )
         }
@@ -41,6 +69,7 @@ class WebFieldViewModelImpl(val webView: WebView): FieldViewModel {
         json.put("fieldName", fieldLayer.fieldName.value)
         json.put("fieldLayerName", fieldLayer.fieldLayerName.value)
         json.put("fieldData", JSONArray(fieldLayer.fieldData.value))
+        json.put("fieldCollisionData", if(fieldLayer.fieldCollisionData != null) JSONArray(fieldLayer.fieldCollisionData.value) else null)
         Log.e("WebFieldViewModelImpl", json.toString())
         webView.evaluateJavascript("fromNative.updateFieldLayer(${json.toString()})"){}
     }
@@ -57,5 +86,11 @@ class WebFieldViewModelImpl(val webView: WebView): FieldViewModel {
     override fun onButtonUp(arrowButtonType: ArrowButtonType) {
         webView.evaluateJavascript("fromNative.onButtonUp(\"${arrowButtonType.name}\")"){}
         Log.e("WebFieldViewModelImpl", "onButtonUp " + arrowButtonType.name)
+    }
+}
+
+class FieldViewModelFactoryImpl(val webView: WebView): FieldViewModelFactory {
+    override fun create(onload: (FieldViewModel) -> Unit, onstep: (FieldViewModel, Position) -> Unit): FieldViewModel {
+        return WebFieldViewModelImpl(webView, onload, onstep)
     }
 }
