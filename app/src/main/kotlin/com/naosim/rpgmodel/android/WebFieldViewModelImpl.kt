@@ -13,7 +13,7 @@ import org.json.JSONObject
 class WebFieldViewModelImpl(
         val webView: WebView,
         override val onload: (FieldViewModel) -> Unit,
-        override val onstep: (FieldViewModel, Position) -> Unit
+        override val onstep: (FieldViewModel, PositionAndDirection) -> Unit
 ): FieldViewModel {
     init {
         webView.setWebChromeClient(object : WebChromeClient() {
@@ -27,10 +27,14 @@ class WebFieldViewModelImpl(
                         onload.invoke(this@WebFieldViewModelImpl)
                     } else if (methodName == "position") {
                         val obj = JSONObject(args[1])
-                        onstep.invoke(this@WebFieldViewModelImpl, Position(
+                        val position = Position(
                                 FieldNameImpl(obj.getString("fieldName")),
                                 X(obj.getInt("x")),
                                 Y(obj.getInt("y"))
+                        )
+                        onstep.invoke(this@WebFieldViewModelImpl, PositionAndDirection(
+                                position,
+                                createDirection(obj.getString("direction"))
                         ))
                     }
                     return true
@@ -44,14 +48,18 @@ class WebFieldViewModelImpl(
     }
 
 
-    override fun getPosition(callback: (Position) -> Unit) {
+    override fun getPositionAndDirection(callback: (PositionAndDirection) -> Unit) {
         webView.evaluateJavascript("fromNative.getPosition()") {
             val v = JSONObject(it)
+            val position = Position(
+                    com.naosim.rpgmodel.lib.value.field.FieldNameImpl(v.getString("fieldName")!!),
+                    X(v.getInt("x")),
+                    Y(v.getInt("y"))
+            )
             callback.invoke(
-                    Position(
-                            com.naosim.rpgmodel.lib.value.field.FieldNameImpl(v.getString("fieldName")!!),
-                            X(v.getInt("x")),
-                            Y(v.getInt("y"))
+                    PositionAndDirection(
+                            position,
+                            createDirection(v.getString("direction"))
                     )
             )
         }
@@ -92,7 +100,7 @@ class WebFieldViewModelImpl(
 }
 
 class FieldViewModelFactoryImpl(val webView: WebView): FieldViewModelFactory {
-    override fun create(onload: (FieldViewModel) -> Unit, onstep: (FieldViewModel, Position) -> Unit): FieldViewModel {
+    override fun create(onload: (FieldViewModel) -> Unit, onstep: (FieldViewModel, PositionAndDirection) -> Unit): FieldViewModel {
         return WebFieldViewModelImpl(webView, onload, onstep)
     }
 }

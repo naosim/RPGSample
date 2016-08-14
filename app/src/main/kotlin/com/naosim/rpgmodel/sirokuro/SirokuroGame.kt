@@ -3,7 +3,7 @@ package com.naosim.rpgmodel.sirokuro
 import android.util.Log
 import com.naosim.rpgmodel.lib.script.MessageScriptController
 import com.naosim.rpgmodel.lib.value.ItemSet
-import com.naosim.rpgmodel.lib.value.field.Position
+import com.naosim.rpgmodel.lib.value.field.PositionAndDirection
 import com.naosim.rpgmodel.lib.value.field.X
 import com.naosim.rpgmodel.lib.value.field.Y
 import com.naosim.rpgmodel.lib.viewmodel.FieldViewModel
@@ -37,9 +37,10 @@ class SirokuroGame(
                             Log.e("SirokuroGame", "onload")
                             it.updateFieldAndGo(yagiFieldMap.mainField, X(0), Y(0))
                         },
-                        { fieldViewModel: FieldViewModel, position: Position ->
+                        { fieldViewModel: FieldViewModel, positionAndDirection: PositionAndDirection ->
+                            val position = positionAndDirection.position
                             if(!isJump) {
-                                Log.e("SirokuroGame", "${position.fieldName.value}:${position.x.value}, ${position.y.value}")
+                                Log.e("SirokuroGame", "${position.fieldName.value}:${position.x.value}, ${position.y.value}, ${positionAndDirection.direction.name}")
 
                                 isJump = jump(
                                         position,
@@ -68,8 +69,9 @@ class SirokuroGame(
     }
 
     fun onPressAButton() {
-        fieldViewModel.getPosition {
-            Log.e("SirokuroGame", "${it.fieldName.value}:${it.x.value}, ${it.y.value}")
+        fieldViewModel.getPositionAndDirection {
+            val position = it.position
+            Log.e("SirokuroGame", "${position.fieldName.value}:${position.x.value}, ${position.y.value}, ${it.direction.name}")
         }
 
     }

@@ -4,8 +4,8 @@ import com.naosim.rpgmodel.lib.value.field.*
 
 interface FieldViewModel {
     val onload: (FieldViewModel) -> Unit
-    val onstep: (FieldViewModel, Position) -> Unit
-    fun getPosition(callback: (Position) -> Unit)
+    val onstep: (FieldViewModel, PositionAndDirection) -> Unit
+    fun getPositionAndDirection(callback: (PositionAndDirection) -> Unit)
     fun gotoPosition(pos: Position)
     fun updateFieldLayer(fieldLayer: FieldLayer)
     fun runFieldEffect(FieldEffect: FieldEffect, callback: () -> Unit)
@@ -23,6 +23,3 @@ interface FieldViewModel {
     }
 }
 
-interface FieldViewModelFactory {
-    fun create(onload: (FieldViewModel) -> Unit, onstep: (FieldViewModel, Position) -> Unit): FieldViewModel
-}
