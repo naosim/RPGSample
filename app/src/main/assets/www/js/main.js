@@ -10,6 +10,7 @@ var Player = function(game) {
   bear.frame = [1,1,2,2,1,1,0,0];   // select sprite frame
   bear.collision = { x: 8, y: 16, width: 16, height: 16 };
   bear.lastPos = {x: 0, y: 0};
+  bear.direction = 'down';
 
   var movingDiff = {x:0, y:0};
   bear.addEventListener('enterframe',function(){ //イベントリスナーを追加する
@@ -19,33 +20,44 @@ var Player = function(game) {
     if(x % 16 !== 0) {
       x +=movingDiff.x;
     } else {
-      if(buttonStatus.right == 'down') {
+      if(buttonStatus.right == 'down' && !mapGroup.hitTest(x + 16, y)) {
         movingDiff.x = walkSpeed;
         x += movingDiff.x;
-      } else if(x != 0 && buttonStatus.left == 'down') {
+        bear.direction = 'right';
+        bear.frame = [19,19,20,20,19,19,18,18];
+      } else if(x != 0 && buttonStatus.left == 'down' && !mapGroup.hitTest(x - 16, y)) {
         movingDiff.x = -walkSpeed;
         x += movingDiff.x;
+        bear.direction = 'left';
+        bear.frame = [10,10,11,11,10,10,9,9];
       }
     }
 
     if(y % 16 !== 0) {
       y += movingDiff.y;
     } else {
-      if(buttonStatus.down == 'down') {
+      if(buttonStatus.down == 'down' && !mapGroup.hitTest(x, y + 16)) {
         movingDiff.y = walkSpeed;
         y += movingDiff.y;
-      } else if(y != 0 && buttonStatus.up == 'down') {
+        bear.direction = 'down';
+        bear.frame = [1,1,2,2,1,1,0,0];
+      } else if(y != 0 && buttonStatus.up == 'down' && !mapGroup.hitTest(x, y - 16)) {
         movingDiff.y = -walkSpeed;
         y += movingDiff.y;
+        bear.direction = 'up';
+        bear.frame = [28,28,29,29,28,28,27,27];
+
+
       }
     }
     setPos(x, y);
+
 
     if(x % 16 == 0 && y % 16 == 0) {
       if(bear.lastPos.x != x || bear.lastPos.y != y) {
         bear.lastPos.x = x;
         bear.lastPos.y = y;
-        notifyToNative('position', {fieldName: currentFieldName, x: bear.lastPos.x / 16, y: bear.lastPos.y / 16});
+        notifyToNative('position', {fieldName: currentFieldName, x: bear.lastPos.x / 16, y: bear.lastPos.y / 16, direction: bear.direction});
       }
     }
   });
@@ -73,6 +85,10 @@ var Player = function(game) {
     bear.lastPos = {x: -16, y: -16};
   };
 
+  var getDirection = function() {
+    return bear.direction;
+  };
+
   setPos(0, 0);
 
   return {
@@ -80,7 +96,8 @@ var Player = function(game) {
     getPos: getPos,
     getLastPos: getLastPos,
     setPos: setPos,
-    resetLastPos: resetLastPos
+    resetLastPos: resetLastPos,
+    getDirection: getDirection,
   };
 };
 
@@ -100,6 +117,9 @@ var MapGroup = function() {
     group: group,
     back: back,
     front: front,
+    hitTest: function(x, y) {
+      return back.hitTest(x, y) || front.hitTest(x, y);
+    },
       // event: new Map(16, 16),
   };
 };
@@ -112,37 +132,37 @@ game.onload = function(){
   game.rootScene.addChild(mapGroup.group);
 
 
-  player = Player(game);
+  player = Player(game, mapGroup);
   mapGroup.group.addChild(player.sprite);
 
-  // var last = {
-  //   up: false,
-  //   down: false,
-  //   left: false,
-  //   right: false
-  // }
+  var last = {
+    up: false,
+    down: false,
+    left: false,
+    right: false
+  }
   this.addEventListener('enterframe',function(){
     //ブラウザテスト用
-    // var run = function(key) {
-    //   if(game.input[key] != last[key]) {
-    //       if(game.input[key]) {
-    //         fromNative.onButtonDown(key);
-    //         // console.log(key);
-    //       } else {
-    //         fromNative.onButtonUp(key);
-    //       }
-    //   }
-    // }
-    //
-    // run('up');
-    // run('down');
-    // run('left');
-    // run('right');
-    //
-    // last.up = game.input.up;
-    // last.down = game.input.down;
-    // last.left = game.input.left;
-    // last.right = game.input.right;
+    var run = function(key) {
+      if(game.input[key] != last[key]) {
+          if(game.input[key]) {
+            fromNative.onButtonDown(key);
+            // console.log(key);
+          } else {
+            fromNative.onButtonUp(key);
+          }
+      }
+    }
+
+    run('up');
+    run('down');
+    run('left');
+    run('right');
+
+    last.up = game.input.up;
+    last.down = game.input.down;
+    last.left = game.input.left;
+    last.right = game.input.right;
 
     // カメラ位置
     var p = player.getPos();
@@ -169,7 +189,7 @@ var map = {};
 
 fromNative.getPosition = function() {
   var lastPos = player.getLastPos();
-  return {fieldName: currentFieldName, x: lastPos.x / 16, y: lastPos.y / 16};
+  return {fieldName: currentFieldName, x: lastPos.x / 16, y: lastPos.y / 16, direction: player.getDirection()};
 };
 fromNative.onButtonDown = function(arrowButtonType) {
   buttonStatus[arrowButtonType] = 'down';
@@ -188,9 +208,6 @@ fromNative.gotoPosition = function(arg) {
 };
 
 var updateMapDraw = function() {
-
-
-
   // console.log("updateMapDraw", currentFieldName);
   ['back', 'front'].forEach(fieldLayerName => {
     if(!map[currentFieldName][fieldLayerName]) {
@@ -232,3 +249,5 @@ var notifyToNative = function(methodName, values) {
     console.log(methodName + '###');
   }
 };
+
+console.log('version: 1');

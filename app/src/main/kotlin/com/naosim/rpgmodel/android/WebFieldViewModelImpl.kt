@@ -23,9 +23,9 @@ class WebFieldViewModelImpl(
                     val args = cm.message().split("###")
                     val methodName = args[0]
 
-                    if(methodName == "onload") {
+                    if (methodName == "onload") {
                         onload.invoke(this@WebFieldViewModelImpl)
-                    } else if(methodName == "position"){
+                    } else if (methodName == "position") {
                         val obj = JSONObject(args[1])
                         onstep.invoke(this@WebFieldViewModelImpl, Position(
                                 FieldNameImpl(obj.getString("fieldName")),
@@ -33,10 +33,12 @@ class WebFieldViewModelImpl(
                                 Y(obj.getInt("y"))
                         ))
                     }
-
+                    return true
+                } else {
+                    Log.e("console${cm.lineNumber()}", cm.message())
                 }
 
-                return true
+                return false
             }
         })
     }
