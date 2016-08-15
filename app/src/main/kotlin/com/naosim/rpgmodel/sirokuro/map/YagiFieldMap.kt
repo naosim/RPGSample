@@ -1,6 +1,7 @@
 package com.naosim.rpgmodel.sirokuro.map
 
 import com.naosim.rpgmodel.lib.value.field.*
+import com.naosim.rpgmodel.sirokuro.charactor.EventTargetType
 import java.util.*
 
 enum class YagiFieldName: FieldName {
@@ -154,6 +155,26 @@ class YagiFieldMap {
         linkList = ArrayList<FieldLink>()
         linkList.add(FieldLink(Position(YagiFieldName.main, X(3), Y(1)), Position(YagiFieldName.kuro, X(7), Y(6))))
         linkList.add(FieldLink(Position(YagiFieldName.main, X(14), Y(1)), Position(YagiFieldName.siro, X(2), Y(6))))
+    }
+
+    fun getCheckEventTarget(positionAndDirection: PositionAndDirection): EventTargetType? {
+        if(eq(positionAndDirection, YagiFieldName.kuro, 4, 2, Direction.up)
+                || eq(positionAndDirection, YagiFieldName.kuro, 3, 1, Direction.right)
+                || eq(positionAndDirection, YagiFieldName.kuro, 5, 1, Direction.left)) {
+            return EventTargetType.kuro
+        } else if(eq(positionAndDirection, YagiFieldName.siro, 5, 2, Direction.up)
+                || eq(positionAndDirection, YagiFieldName.siro, 4, 1, Direction.right)
+                || eq(positionAndDirection, YagiFieldName.siro, 6, 1, Direction.left)) {
+            return EventTargetType.siro
+        }
+        return null;
+    }
+
+
+    fun eq(positionAndDirection: PositionAndDirection, fieldName: FieldName, x: Int, y: Int, direction: Direction): Boolean {
+        val p = positionAndDirection.position
+        val d = positionAndDirection.direction
+        return p.fieldName.value == fieldName.value && p.x.value == x && p.y.value == y && d == direction
     }
 
 

@@ -8,10 +8,7 @@ import com.naosim.rpgmodel.lib.value.field.X
 import com.naosim.rpgmodel.lib.value.field.Y
 import com.naosim.rpgmodel.lib.viewmodel.FieldViewModel
 import com.naosim.rpgmodel.lib.viewmodel.FieldViewModelFactory
-import com.naosim.rpgmodel.sirokuro.charactor.GameItem
-import com.naosim.rpgmodel.sirokuro.charactor.KuroYagi
-import com.naosim.rpgmodel.sirokuro.charactor.Player
-import com.naosim.rpgmodel.sirokuro.charactor.SiroYagi
+import com.naosim.rpgmodel.sirokuro.charactor.*
 import com.naosim.rpgmodel.sirokuro.global.GlobalContainer
 import com.naosim.rpgmodel.sirokuro.global.Status
 import com.naosim.rpgmodel.sirokuro.map.YagiFieldMap
@@ -72,6 +69,13 @@ class SirokuroGame(
         fieldViewModel.getPositionAndDirection {
             val position = it.position
             Log.e("SirokuroGame", "${position.fieldName.value}:${position.x.value}, ${position.y.value}, ${it.direction.name}")
+            yagiFieldMap.getCheckEventTarget(it)?.let {
+                when(it) {
+                    EventTargetType.kuro -> kuro.check()
+                    EventTargetType.siro -> siro.check()
+                }
+
+            }
         }
 
     }
