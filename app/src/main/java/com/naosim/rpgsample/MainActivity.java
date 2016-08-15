@@ -1,6 +1,7 @@
 package com.naosim.rpgsample;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,6 +29,12 @@ public class MainActivity extends AppCompatActivity {
         final MessageViewModel messageViewModel = new MessageViewModelImpl((TextView)findViewById(R.id.text), findViewById(R.id.nextIcon));
         final MessageScriptController c = new MessageScriptController(messageViewModel);
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                System.gc();
+            }
+        }, 5000);
 
 
 
@@ -41,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         WebView webView = (WebView)findViewById(R.id.webView);
+        webView.clearCache(true);
 
         this.sirokuroGame = new SirokuroGame(
                 new FieldViewModelFactoryImpl(webView),

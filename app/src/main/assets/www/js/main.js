@@ -19,36 +19,38 @@ var Player = function(game) {
     var y = pos.y;
     if(x % 16 !== 0) {
       x +=movingDiff.x;
-    } else {
-      if(buttonStatus.right == 'down' && !mapGroup.hitTest(x + 16, y)) {
+    } else if(buttonStatus.right == 'down') {
+      if(!mapGroup.hitTest(x + 16, y)) {
         movingDiff.x = walkSpeed;
         x += movingDiff.x;
-        bear.direction = 'right';
-        bear.frame = [19,19,20,20,19,19,18,18];
-      } else if(x != 0 && buttonStatus.left == 'down' && !mapGroup.hitTest(x - 16, y)) {
+      }
+      bear.frame = [19,19,20,20,19,19,18,18];
+      bear.direction = 'right';
+    } else if(buttonStatus.left == 'down') {
+      if(x != 0 && !mapGroup.hitTest(x - 16, y)) {
         movingDiff.x = -walkSpeed;
         x += movingDiff.x;
-        bear.direction = 'left';
-        bear.frame = [10,10,11,11,10,10,9,9];
       }
+      bear.frame = [10,10,11,11,10,10,9,9];
+      bear.direction = 'left';
     }
 
     if(y % 16 !== 0) {
       y += movingDiff.y;
-    } else {
-      if(buttonStatus.down == 'down' && !mapGroup.hitTest(x, y + 16)) {
+    } else if(buttonStatus.down == 'down') {
+      if(!mapGroup.hitTest(x, y + 16)) {
         movingDiff.y = walkSpeed;
         y += movingDiff.y;
-        bear.direction = 'down';
-        bear.frame = [1,1,2,2,1,1,0,0];
-      } else if(y != 0 && buttonStatus.up == 'down' && !mapGroup.hitTest(x, y - 16)) {
+      }
+      bear.frame = [1,1,2,2,1,1,0,0];
+      bear.direction = 'down';
+    } else if(buttonStatus.up == 'down') {
+      if(y != 0 && !mapGroup.hitTest(x, y - 16)) {
         movingDiff.y = -walkSpeed;
         y += movingDiff.y;
-        bear.direction = 'up';
-        bear.frame = [28,28,29,29,28,28,27,27];
-
-
       }
+      bear.frame = [28,28,29,29,28,28,27,27];
+      bear.direction = 'up';
     }
     setPos(x, y);
 
@@ -250,4 +252,4 @@ var notifyToNative = function(methodName, values) {
   }
 };
 
-console.log('version: 1');
+console.log('version: 2');
