@@ -2,21 +2,24 @@ package com.naosim.rpgmodel.sirokuro
 
 import android.util.Log
 import com.naosim.rpgmodel.lib.script.MessageScriptController
-import com.naosim.rpgmodel.lib.value.ItemSet
 import com.naosim.rpgmodel.lib.value.field.PositionAndDirection
 import com.naosim.rpgmodel.lib.value.field.X
 import com.naosim.rpgmodel.lib.value.field.Y
 import com.naosim.rpgmodel.lib.viewmodel.FieldViewModel
 import com.naosim.rpgmodel.lib.viewmodel.FieldViewModelFactory
-import com.naosim.rpgmodel.sirokuro.charactor.*
+import com.naosim.rpgmodel.sirokuro.charactor.EventTargetType
+import com.naosim.rpgmodel.sirokuro.charactor.KuroYagi
+import com.naosim.rpgmodel.sirokuro.charactor.Player
+import com.naosim.rpgmodel.sirokuro.charactor.SiroYagi
+import com.naosim.rpgmodel.sirokuro.global.DataSaveRepository
 import com.naosim.rpgmodel.sirokuro.global.GlobalContainer
-import com.naosim.rpgmodel.sirokuro.global.Status
 import com.naosim.rpgmodel.sirokuro.map.YagiFieldMap
 import com.naosim.rpgmodel.sirokuro.map.jump
 
 class SirokuroGame(
         val fieldViewModelFactory: FieldViewModelFactory,
-        val messageScriptController: MessageScriptController
+        val messageScriptController: MessageScriptController,
+        val dataSaveRepository: DataSaveRepository
 ) {
     val fieldViewModel: FieldViewModel
     val kuro: KuroYagi
@@ -26,43 +29,50 @@ class SirokuroGame(
 
     var isJump = false;
 
-            init {
+    private val globalContainer: GlobalContainer
 
+    init {
+        this.fieldViewModel = fieldViewModelFactory.create(
+                {
+                    Log.e("SirokuroGame", "onload")
+                    it.updateFieldAndGo(yagiFieldMap.mainField, X(0), Y(0))
+                },
+                { fieldViewModel: FieldViewModel, positionAndDirection: PositionAndDirection ->
+                    val position = positionAndDirection.position
+                    if(!isJump) {
+                        Log.e("SirokuroGame", "${position.fieldName.value}:${position.x.value}, ${position.y.value}, ${positionAndDirection.direction.name}")
 
-                this.fieldViewModel = fieldViewModelFactory.create(
-                        {
-                            Log.e("SirokuroGame", "onload")
-                            it.updateFieldAndGo(yagiFieldMap.mainField, X(0), Y(0))
-                        },
-                        { fieldViewModel: FieldViewModel, positionAndDirection: PositionAndDirection ->
-                            val position = positionAndDirection.position
-                            if(!isJump) {
-                                Log.e("SirokuroGame", "${position.fieldName.value}:${position.x.value}, ${position.y.value}, ${positionAndDirection.direction.name}")
+                        isJump = jump(
+                                position,
+                                fieldViewModel,
+                                yagiFieldMap,
+                                yagiFieldMap.linkList
+                        )
 
-                                isJump = jump(
-                                        position,
-                                        fieldViewModel,
-                                        yagiFieldMap,
-                                        yagiFieldMap.linkList
-                                )
+                    } else {
+                        isJump = false
+                    }
 
-                            } else {
-                                isJump = false
-                            }
+                }
+        )
 
-                        }
-                )
+        val dataSaveContainer = dataSaveRepository.load();
 
-                val itemSet = ItemSet<GameItem>()
-                itemSet.add(GameItem.やくそう)
-                itemSet.add(GameItem.やくそう)
-                itemSet.add(GameItem.やくそう)
+        this.globalContainer = GlobalContainer(
+                messageScriptController,
+                dataSaveContainer.status,
+                dataSaveContainer.itemSet,
+                this.fieldViewModel
+        )
 
-                val gc = GlobalContainer(messageScriptController, Status(), itemSet, this.fieldViewModel)
+        this.kuro = KuroYagi(globalContainer)
+        this.siro = SiroYagi(globalContainer)
+        this.player = Player(globalContainer)
+    }
 
-                this.kuro = KuroYagi(gc)
-                this.siro = SiroYagi(gc)
-                this.player = Player(gc)
+    fun onDestroy() {
+        Log.e(this.javaClass.simpleName, "onDestroy")
+        dataSaveRepository.save(globalContainer.getDataSaveContainer())
     }
 
     fun onPressAButton() {

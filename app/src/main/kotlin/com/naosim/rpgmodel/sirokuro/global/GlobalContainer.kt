@@ -10,4 +10,8 @@ class GlobalContainer(
         val status: Status,
         val itemSet: ItemSet<GameItem>,
         val fieldViewModel: FieldViewModel
-)
+) {
+    fun getDataSaveContainer(): DataSaveContainer {
+        return DataSaveContainer(status, itemSet)
+    }
+}

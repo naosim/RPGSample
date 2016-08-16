@@ -5,6 +5,7 @@ import com.naosim.rpgmodel.lib.value.ValueUpdater
 
 enum class Turn {
     kuro_eat, kuro_write, siro_eat, siro_write;
+    val value = name
 }
 
 interface TurnValue: Value<Turn, TurnValue> {
@@ -16,5 +17,9 @@ class TurnValueUpdater(turn: Turn = Turn.kuro_eat) : ValueUpdater<Turn, TurnValu
 
     override fun invoke() {
         registerManager.invoke(this)
+    }
+
+    fun getValueString(): String {
+        return getValue().value
     }
 }

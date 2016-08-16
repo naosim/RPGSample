@@ -1,8 +1,11 @@
 package com.naosim.rpgsample;
 
+import android.app.ActionBar;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
@@ -10,6 +13,7 @@ import android.widget.TextView;
 
 import com.naosim.rpgmodel.android.FieldViewModelFactoryImpl;
 import com.naosim.rpgmodel.android.MessageViewModelImpl;
+import com.naosim.rpgmodel.android.sirokuro.DataSaveRepositoryAndroidImpl;
 import com.naosim.rpgmodel.lib.script.MessageScriptController;
 import com.naosim.rpgmodel.lib.value.field.ArrowButtonType;
 import com.naosim.rpgmodel.lib.viewmodel.FieldViewModel;
@@ -26,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ActionBar actionBar = getActionBar();
+        if(actionBar != null)actionBar.hide();
+
         final MessageViewModel messageViewModel = new MessageViewModelImpl((TextView)findViewById(R.id.text), findViewById(R.id.nextIcon));
         final MessageScriptController c = new MessageScriptController(messageViewModel);
 
@@ -50,9 +57,12 @@ public class MainActivity extends AppCompatActivity {
         WebView webView = (WebView)findViewById(R.id.webView);
         webView.clearCache(true);
 
+        DataSaveRepositoryAndroidImpl dataSaveRepository = new DataSaveRepositoryAndroidImpl(getSharedPreferences("hoge", Context.MODE_PRIVATE));
+
         this.sirokuroGame = new SirokuroGame(
                 new FieldViewModelFactoryImpl(webView),
-                c
+                c,
+                dataSaveRepository
         );
 
 
@@ -71,9 +81,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e("MainActivity", "onPause");
+        this.sirokuroGame.onDestroy();
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e("MainActivity", "onStop");
+        this.sirokuroGame.onDestroy();
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e("MainActivity", "onDestroy");
+        this.sirokuroGame.onDestroy();
     }
 
     static class ButtonEvent implements View.OnTouchListener {
