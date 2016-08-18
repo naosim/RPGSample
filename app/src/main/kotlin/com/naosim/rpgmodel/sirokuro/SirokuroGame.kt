@@ -3,8 +3,6 @@ package com.naosim.rpgmodel.sirokuro
 import android.util.Log
 import com.naosim.rpgmodel.lib.script.MessageScriptController
 import com.naosim.rpgmodel.lib.value.field.PositionAndDirection
-import com.naosim.rpgmodel.lib.value.field.X
-import com.naosim.rpgmodel.lib.value.field.Y
 import com.naosim.rpgmodel.lib.viewmodel.FieldViewModel
 import com.naosim.rpgmodel.lib.viewmodel.FieldViewModelFactory
 import com.naosim.rpgmodel.sirokuro.charactor.EventTargetType
@@ -32,37 +30,24 @@ class SirokuroGame(
     private val globalContainer: GlobalContainer
 
     init {
+        val dataSaveContainer = dataSaveRepository.load()
         this.fieldViewModel = fieldViewModelFactory.create(
                 {
-                    Log.e("SirokuroGame", "onload")
-                    it.updateFieldAndGo(yagiFieldMap.mainField, X(0), Y(0))
+                    initFieldViewModel(it)
                 },
                 { fieldViewModel: FieldViewModel, positionAndDirection: PositionAndDirection ->
-                    val position = positionAndDirection.position
-                    if(!isJump) {
-                        Log.e("SirokuroGame", "${position.fieldName.value}:${position.x.value}, ${position.y.value}, ${positionAndDirection.direction.name}")
-
-                        isJump = jump(
-                                position,
-                                fieldViewModel,
-                                yagiFieldMap,
-                                yagiFieldMap.linkList
-                        )
-
-                    } else {
-                        isJump = false
-                    }
-
+                    updatePositionAndDirection(positionAndDirection)
                 }
         )
 
-        val dataSaveContainer = dataSaveRepository.load();
+
 
         this.globalContainer = GlobalContainer(
                 messageScriptController,
                 dataSaveContainer.status,
                 dataSaveContainer.itemSet,
-                this.fieldViewModel
+                this.fieldViewModel,
+                dataSaveContainer.position
         )
 
         this.kuro = KuroYagi(globalContainer)
@@ -88,6 +73,33 @@ class SirokuroGame(
             }
         }
 
+    }
+
+    fun initFieldViewModel(fieldViewModel: FieldViewModel) {
+        val position = globalContainer.lastPosition
+        fieldViewModel.updateFieldAndGo(
+                yagiFieldMap.getField(position.fieldName),
+                position.x,
+                position.y
+        )
+    }
+
+    fun updatePositionAndDirection(positionAndDirection: PositionAndDirection) {
+        val position = positionAndDirection.position
+        globalContainer.lastPosition = position
+        if(!isJump) {
+            Log.e("SirokuroGame", "${position.fieldName.value}:${position.x.value}, ${position.y.value}, ${positionAndDirection.direction.name}")
+
+            isJump = jump(
+                    position,
+                    fieldViewModel,
+                    yagiFieldMap,
+                    yagiFieldMap.linkList
+            )
+
+        } else {
+            isJump = false
+        }
     }
 
 }
