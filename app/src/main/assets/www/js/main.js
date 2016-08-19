@@ -197,11 +197,9 @@ fromNative.getPosition = function() {
 };
 fromNative.onButtonDown = function(arrowButtonType) {
   buttonStatus[arrowButtonType] = 'down';
-  document.querySelector('#downButtonStatus').innerHTML = buttonStatus.down;
 };
 fromNative.onButtonUp = function(arrowButtonType) {
   buttonStatus[arrowButtonType] = 'up';
-  document.querySelector('#downButtonStatus').innerHTML = buttonStatus.down;
 };
 
 fromNative.gotoPosition = function(arg) {

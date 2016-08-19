@@ -14,9 +14,53 @@ body {
   background: #000;
 }
 </style>
-
 <script src="./js/enchant/enchant.js"></script>
-downButtonStatus: <span id="downButtonStatus"></span>
-<!-- <div id="enchant-stage"></div> -->
+
+<div></div>
 
 <script src="./js/main.js"></script>
+<script>
+/*
+fromNative.updateFieldLayer = function(arg) {
+  var fieldName = arg.fieldName;
+  var fieldLayerName = arg.fieldLayerName;
+  var fieldData = arg.fieldData;
+  var fieldCollisionData = arg.fieldCollisionData;
+*/
+
+var fieldData = [
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+]
+setTimeout(()=>{
+  var ua = navigator.userAgent.toLowerCase();
+  if(ua.indexOf('android') != -1) {
+    return;
+  }
+  fromNative.updateFieldLayer({
+      fieldName: 'main',
+      fieldLayerName: 'back',
+      fieldData: fieldData
+  });
+  fromNative.gotoPosition({
+    fieldName: 'main',
+    x:0,
+    y:0
+  })
+}, 1000);
+
+</script>
