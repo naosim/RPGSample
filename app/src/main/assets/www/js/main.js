@@ -113,6 +113,8 @@ var MapGroup = function() {
   var group = new Group();
   var back =  new Map(16, 16);
   var front =  new Map(16, 16);
+  back.touchEnabled = false;
+  front.touchEnabled = false;
   group.addChild(back);
   group.addChild(front);
   return {
