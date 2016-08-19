@@ -211,6 +211,9 @@ fromNative.gotoPosition = function(arg) {
 
 var updateMapDraw = function() {
   // console.log("updateMapDraw", currentFieldName);
+  if(!map[currentFieldName]) {
+    return;
+  }
   ['back', 'front'].forEach(fieldLayerName => {
     if(!map[currentFieldName][fieldLayerName]) {
       mapGroup[fieldLayerName].loadData([[]]);
