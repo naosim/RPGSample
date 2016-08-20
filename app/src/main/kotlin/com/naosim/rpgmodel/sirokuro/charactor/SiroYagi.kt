@@ -18,7 +18,10 @@ class SiroYagi(globalContainer: GlobalContainer): EventableObjectCommon(globalCo
                         届けてくれる？」[r]
                         ${other}さんへの手紙を受け取った
                         """,
-                        { globalContainer.status.turnValue.next() }
+                        {
+                            globalContainer.itemSet.add(GameItem.しろやぎさんの手紙)
+                            globalContainer.status.turnValue.next()
+                        }
                 )
             }
 
@@ -34,9 +37,11 @@ class SiroYagi(globalContainer: GlobalContainer): EventableObjectCommon(globalCo
             Turn.kuro_eat -> {
                 scriptUtil.script(
                         """
-                        ${self}「渡してくれてありがとう！」
+                        ${self}「渡してくれてありがとう！[r]
+                        おれいにやくそうをあげるよ
+                        」
                         """
-                )
+                ,{globalContainer.itemSet.add(GameItem.やくそう)})
             }
 
             Turn.kuro_write -> {
@@ -46,9 +51,20 @@ class SiroYagi(globalContainer: GlobalContainer): EventableObjectCommon(globalCo
                         ありがとう。
                         それにしてもお腹すいたなぁ」
                         """,
-                        { globalContainer.status.turnValue.next() }
+                        {
+                            globalContainer.itemSet.remove(GameItem.くろやぎさんの手紙)
+                            globalContainer.status.turnValue.next()
+                        }
                 )
             }
         }
+    }
+
+    override fun useItem(item: GameItem): Boolean {
+        if(item == GameItem.くろやぎさんの手紙) {
+            check()
+            return true
+        }
+        return false
     }
 }

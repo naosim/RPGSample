@@ -157,7 +157,7 @@ class YagiFieldMap {
         linkList.add(FieldLink(Position(YagiFieldName.main, X(14), Y(1)), Position(YagiFieldName.siro, X(2), Y(6))))
     }
 
-    fun getCheckEventTarget(positionAndDirection: PositionAndDirection): EventTargetType? {
+    fun getCheckEventTarget(positionAndDirection: PositionAndDirection): EventTargetType {
         if(eq(positionAndDirection, YagiFieldName.kuro, 4, 2, Direction.up)
                 || eq(positionAndDirection, YagiFieldName.kuro, 3, 1, Direction.right)
                 || eq(positionAndDirection, YagiFieldName.kuro, 5, 1, Direction.left)) {
@@ -167,7 +167,7 @@ class YagiFieldMap {
                 || eq(positionAndDirection, YagiFieldName.siro, 6, 1, Direction.left)) {
             return EventTargetType.siro
         }
-        return null;
+        return EventTargetType.player
     }
 
 

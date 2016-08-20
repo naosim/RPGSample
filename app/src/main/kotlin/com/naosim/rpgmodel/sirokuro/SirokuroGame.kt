@@ -5,10 +5,7 @@ import com.naosim.rpgmodel.lib.script.MessageScriptController
 import com.naosim.rpgmodel.lib.value.field.PositionAndDirection
 import com.naosim.rpgmodel.lib.viewmodel.FieldViewModel
 import com.naosim.rpgmodel.lib.viewmodel.FieldViewModelFactory
-import com.naosim.rpgmodel.sirokuro.charactor.EventTargetType
-import com.naosim.rpgmodel.sirokuro.charactor.KuroYagi
-import com.naosim.rpgmodel.sirokuro.charactor.Player
-import com.naosim.rpgmodel.sirokuro.charactor.SiroYagi
+import com.naosim.rpgmodel.sirokuro.charactor.*
 import com.naosim.rpgmodel.sirokuro.global.DataSaveRepository
 import com.naosim.rpgmodel.sirokuro.global.GlobalContainer
 import com.naosim.rpgmodel.sirokuro.map.YagiFieldMap
@@ -27,7 +24,7 @@ class SirokuroGame(
 
     var isJump = false;
 
-    private val globalContainer: GlobalContainer
+    val globalContainer: GlobalContainer
 
     init {
         val dataSaveContainer = dataSaveRepository.load()
@@ -39,8 +36,6 @@ class SirokuroGame(
                     updatePositionAndDirection(positionAndDirection)
                 }
         )
-
-
 
         this.globalContainer = GlobalContainer(
                 messageScriptController,
@@ -62,17 +57,21 @@ class SirokuroGame(
 
     fun onPressAButton() {
         fieldViewModel.getPositionAndDirection {
-            val position = it.position
-            Log.e("SirokuroGame", "${position.fieldName.value}:${position.x.value}, ${position.y.value}, ${it.direction.name}")
-            yagiFieldMap.getCheckEventTarget(it)?.let {
-                when(it) {
-                    EventTargetType.kuro -> kuro.check()
-                    EventTargetType.siro -> siro.check()
-                }
-
+            when(yagiFieldMap.getCheckEventTarget(it)) {
+                EventTargetType.kuro -> kuro.check()
+                EventTargetType.siro -> siro.check()
             }
         }
+    }
 
+    fun onItemUsed(gameItem: GameItem) {
+        fieldViewModel.getPositionAndDirection {
+            when(yagiFieldMap.getCheckEventTarget(it)) {
+                EventTargetType.kuro -> kuro.useItem(gameItem)
+                EventTargetType.siro -> siro.useItem(gameItem)
+                else -> player.useItem(gameItem)
+            }
+        }
     }
 
     fun initFieldViewModel(fieldViewModel: FieldViewModel) {

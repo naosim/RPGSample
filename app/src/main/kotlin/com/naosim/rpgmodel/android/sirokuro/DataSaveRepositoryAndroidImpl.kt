@@ -1,25 +1,30 @@
 package com.naosim.rpgmodel.android.sirokuro
 
 import android.content.SharedPreferences
+import com.naosim.rpgmodel.lib.value.ItemId
 import com.naosim.rpgmodel.lib.value.ItemSet
 import com.naosim.rpgmodel.lib.value.field.FieldNameImpl
 import com.naosim.rpgmodel.lib.value.field.Position
 import com.naosim.rpgmodel.lib.value.field.X
 import com.naosim.rpgmodel.lib.value.field.Y
 import com.naosim.rpgmodel.sirokuro.charactor.GameItem
+import com.naosim.rpgmodel.sirokuro.charactor.getGameItem
 import com.naosim.rpgmodel.sirokuro.global.DataSaveContainer
 import com.naosim.rpgmodel.sirokuro.global.DataSaveRepository
 import com.naosim.rpgmodel.sirokuro.global.Status
 import com.naosim.rpgmodel.sirokuro.global.Turn
 import com.naosim.rpgmodel.sirokuro.map.YagiFieldName
-import java.util.*
 
 class DataSaveRepositoryAndroidImpl(val sharedPreferences: SharedPreferences): DataSaveRepository {
     override fun load(): DataSaveContainer {
         val itemSet = ItemSet<GameItem>()
-        itemSet.add(GameItem.やくそう)
-        itemSet.add(GameItem.やくそう)
-        itemSet.add(GameItem.やくそう)
+        val itemCsv = sharedPreferences.getString("itemCsv", "${GameItem.やくそう.itemId.value}")
+
+        itemCsv
+                .split(",")
+                .filter { it.trim().length > 0 }
+                .map { getGameItem(ItemId(it)) }
+                .forEach { itemSet.add(it) }
         val status = Status()
         val turnString = sharedPreferences.getString("turn", "kuro_eat")
         status.turnValue.setValue(Turn.valueOf(turnString))
@@ -37,14 +42,12 @@ class DataSaveRepositoryAndroidImpl(val sharedPreferences: SharedPreferences): D
         val editor = sharedPreferences.edit()
         editor.putString("turn", dataSaveContainer.status.turnValue.getValueString())
         // TODO impl
-        val itemSet = HashSet<String>()
-         dataSaveContainer
+        val itemCsv = dataSaveContainer
                 .itemSet
                 .list
-                .map({ arrayOf(it.itemId.value, it.itemName.value) })
-                .map({ "${it[0]},${it[1]}"})
-                .forEach { itemSet.add(it) }
-        editor.putStringSet("itemSet", itemSet)
+                .map({ it.itemId.value })
+                .joinToString(",")
+        editor.putString("itemCsv", itemCsv)
 
         editor.putString("fieldName", dataSaveContainer.position.fieldName.value)
         editor.putInt("x", dataSaveContainer.position.x.value)
