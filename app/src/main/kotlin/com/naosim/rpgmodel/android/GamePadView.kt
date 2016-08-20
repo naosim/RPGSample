@@ -1,11 +1,10 @@
-package com.naosim.rpgmodel.android.sirokuro
+package com.naosim.rpgmodel.android
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.RelativeLayout
-import com.naosim.rpgmodel.android.ArrowPadView
 import com.naosim.rpgsample.R
 
 class GamePadView(context: Context?, attrs: AttributeSet?) : RelativeLayout(context, attrs) {

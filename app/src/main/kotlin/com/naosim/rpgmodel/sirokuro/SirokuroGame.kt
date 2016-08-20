@@ -1,7 +1,9 @@
 package com.naosim.rpgmodel.sirokuro
 
 import android.util.Log
+import com.naosim.rpgmodel.lib.GameMain
 import com.naosim.rpgmodel.lib.script.MessageScriptController
+import com.naosim.rpgmodel.lib.value.Item
 import com.naosim.rpgmodel.lib.value.field.PositionAndDirection
 import com.naosim.rpgmodel.lib.viewmodel.FieldViewModel
 import com.naosim.rpgmodel.lib.viewmodel.FieldViewModelFactory
@@ -15,8 +17,8 @@ class SirokuroGame(
         val fieldViewModelFactory: FieldViewModelFactory,
         val messageScriptController: MessageScriptController,
         val dataSaveRepository: DataSaveRepository
-) {
-    val fieldViewModel: FieldViewModel
+): GameMain {
+    override val fieldViewModel: FieldViewModel
     val kuro: KuroYagi
     val siro: SiroYagi
     val player: Player
@@ -50,12 +52,12 @@ class SirokuroGame(
         this.player = Player(globalContainer)
     }
 
-    fun onDestroy() {
+    override fun onDestroy() {
         Log.e(this.javaClass.simpleName, "onDestroy")
         dataSaveRepository.save(globalContainer.getDataSaveContainer())
     }
 
-    fun onPressAButton() {
+    override fun onPressAButton() {
         fieldViewModel.getPositionAndDirection {
             when(yagiFieldMap.getCheckEventTarget(it)) {
                 EventTargetType.kuro -> kuro.check()
@@ -64,7 +66,8 @@ class SirokuroGame(
         }
     }
 
-    fun onItemUsed(gameItem: GameItem) {
+    override fun onItemUsed(item: Item) {
+        val gameItem = getGameItem(item.itemId)
         fieldViewModel.getPositionAndDirection {
             when(yagiFieldMap.getCheckEventTarget(it)) {
                 EventTargetType.kuro -> kuro.useItem(gameItem)
@@ -99,6 +102,10 @@ class SirokuroGame(
         } else {
             isJump = false
         }
+    }
+
+    override fun getItemList(): List<Item> {
+        return globalContainer.itemSet.list
     }
 
 }
