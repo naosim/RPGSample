@@ -11,10 +11,10 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
 
-import com.naosim.rpgmodel.android.ArrowPadView;
 import com.naosim.rpgmodel.android.FieldViewModelFactoryImpl;
 import com.naosim.rpgmodel.android.MessageViewModelImpl;
 import com.naosim.rpgmodel.android.sirokuro.DataSaveRepositoryAndroidImpl;
+import com.naosim.rpgmodel.android.sirokuro.GamePadView;
 import com.naosim.rpgmodel.lib.script.MessageScriptController;
 import com.naosim.rpgmodel.lib.value.field.ArrowButtonType;
 import com.naosim.rpgmodel.lib.viewmodel.FieldViewModel;
@@ -45,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }, 5000);
 
-
-
         findViewById(R.id.text).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,32 +53,30 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         WebView webView = (WebView)findViewById(R.id.webView);
         webView.clearCache(true);
-
         DataSaveRepositoryAndroidImpl dataSaveRepository = new DataSaveRepositoryAndroidImpl(getSharedPreferences("hoge", Context.MODE_PRIVATE));
-
         this.sirokuroGame = new SirokuroGame(
                 new FieldViewModelFactoryImpl(webView),
                 c,
                 dataSaveRepository
         );
-
-
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl("file:///android_asset/www/index.html?date=" + new Date().getTime());
-        
-        findViewById(R.id.aButton).setOnClickListener(new View.OnClickListener() {
+
+        GamePadView gamepadView = (GamePadView)findViewById(R.id.gamePadView);
+        gamepadView.getAButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sirokuroGame.onPressAButton();
             }
         });
-
-        ArrowPadView apv = (ArrowPadView)findViewById(R.id.arrowPadView);
-        apv.setFieldViewModel(sirokuroGame.getFieldViewModel());
-
+        gamepadView.getBButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+        gamepadView.getArrowPadView().setFieldViewModel(sirokuroGame.getFieldViewModel());
     }
 
     @Override
