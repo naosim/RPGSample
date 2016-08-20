@@ -62,6 +62,8 @@ class MessageViewModelImpl(
 
     override fun dismiss() {
         textView.visibility = View.INVISIBLE
+        nextIcon.clearAnimation()
+        nextIcon.visibility = View.INVISIBLE
     }
 
     override fun isShowing(): Boolean {

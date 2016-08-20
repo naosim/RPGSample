@@ -113,6 +113,8 @@ var MapGroup = function() {
   var group = new Group();
   var back =  new Map(16, 16);
   var front =  new Map(16, 16);
+  back.touchEnabled = false;
+  front.touchEnabled = false;
   group.addChild(back);
   group.addChild(front);
   return {
@@ -195,11 +197,9 @@ fromNative.getPosition = function() {
 };
 fromNative.onButtonDown = function(arrowButtonType) {
   buttonStatus[arrowButtonType] = 'down';
-  document.querySelector('#downButtonStatus').innerHTML = buttonStatus.down;
 };
 fromNative.onButtonUp = function(arrowButtonType) {
   buttonStatus[arrowButtonType] = 'up';
-  document.querySelector('#downButtonStatus').innerHTML = buttonStatus.down;
 };
 
 fromNative.gotoPosition = function(arg) {
@@ -211,6 +211,9 @@ fromNative.gotoPosition = function(arg) {
 
 var updateMapDraw = function() {
   // console.log("updateMapDraw", currentFieldName);
+  if(!map[currentFieldName]) {
+    return;
+  }
   ['back', 'front'].forEach(fieldLayerName => {
     if(!map[currentFieldName][fieldLayerName]) {
       mapGroup[fieldLayerName].loadData([[]]);
