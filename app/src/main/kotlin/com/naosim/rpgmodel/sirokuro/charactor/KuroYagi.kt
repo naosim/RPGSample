@@ -18,7 +18,10 @@ class KuroYagi(globalContainer: GlobalContainer): EventableObjectCommon(globalCo
                         届けてくれる？」[r]
                         ${other}さんへの手紙を受け取った
                         """,
-                        { globalContainer.status.turnValue.next() }
+                        {
+                            globalContainer.itemSet.add(GameItem.くろやぎさんの手紙)
+                            globalContainer.status.turnValue.next()
+                        }
                 )
             }
 
@@ -46,9 +49,20 @@ class KuroYagi(globalContainer: GlobalContainer): EventableObjectCommon(globalCo
                         ありがとう。
                         それにしてもお腹すいたなぁ」
                         """,
-                        { globalContainer.status.turnValue.next() }
+                        {
+                            globalContainer.itemSet.remove(GameItem.しろやぎさんの手紙)
+                            globalContainer.status.turnValue.next()
+                        }
                 )
             }
         }
+    }
+
+    override fun useItem(item: GameItem): Boolean {
+        if(item == GameItem.しろやぎさんの手紙) {
+            check()
+            return true
+        }
+        return false
     }
 }

@@ -1,7 +1,8 @@
-var chara1 = './img/enchant/chara0.png';
-var mapAssetName = './img/enchant/map0_0.png';
-
+var chara1 = AssetData.chara1;
+var mapAssetName = AssetData.mapAssetName;
 var walkSpeed = 4;
+
+var isAndroid = navigator.userAgent.toLowerCase().indexOf('android') != -1;
 
 var Player = function(game) {
   var bear = new Sprite(32, 32);
@@ -13,16 +14,21 @@ var Player = function(game) {
   bear.direction = 'down';
 
   var movingDiff = {x:0, y:0};
+  var lastIsMoving = false;
   bear.addEventListener('enterframe',function(){ //イベントリスナーを追加する
     var pos = getPos();
     var x = pos.x;
     var y = pos.y;
+    var isMoving = false;
+
     if(x % 16 !== 0) {
       x +=movingDiff.x;
+      isMoving = true;
     } else if(buttonStatus.right == 'down') {
       if(!mapGroup.hitTest(x + 16, y)) {
         movingDiff.x = walkSpeed;
         x += movingDiff.x;
+        isMoving = true;
       }
       bear.frame = [19,19,20,20,19,19,18,18];
       bear.direction = 'right';
@@ -33,14 +39,17 @@ var Player = function(game) {
       }
       bear.frame = [10,10,11,11,10,10,9,9];
       bear.direction = 'left';
+      isMoving = true;
     }
 
     if(y % 16 !== 0) {
       y += movingDiff.y;
+      isMoving = true;
     } else if(buttonStatus.down == 'down') {
       if(!mapGroup.hitTest(x, y + 16)) {
         movingDiff.y = walkSpeed;
         y += movingDiff.y;
+        isMoving = true;
       }
       bear.frame = [1,1,2,2,1,1,0,0];
       bear.direction = 'down';
@@ -51,9 +60,20 @@ var Player = function(game) {
       }
       bear.frame = [28,28,29,29,28,28,27,27];
       bear.direction = 'up';
+      isMoving = true;
     }
-    setPos(x, y);
+    
+    if(isMoving) {
+      setPos(x, y);
+    }
 
+    // 止まった瞬間
+    if(lastIsMoving == true && isMoving == false) {
+      console.log(bear.direction, bear.frame);
+      bear.frame = bear.frame;
+    }
+
+    lastIsMoving = isMoving;
 
     if(x % 16 == 0 && y % 16 == 0) {
       if(bear.lastPos.x != x || bear.lastPos.y != y) {
@@ -191,15 +211,36 @@ var buttonStatus = {
 };
 var map = {};
 
+lastSetTimeoutId = null;
+
 fromNative.getPosition = function() {
   var lastPos = player.getLastPos();
   return {fieldName: currentFieldName, x: lastPos.x / 16, y: lastPos.y / 16, direction: player.getDirection()};
 };
 fromNative.onButtonDown = function(arrowButtonType) {
   buttonStatus[arrowButtonType] = 'down';
+  game.resume();
 };
 fromNative.onButtonUp = function(arrowButtonType) {
   buttonStatus[arrowButtonType] = 'up';
+
+  // 節電
+  if(isAndroid) {
+    if(lastSetTimeoutId) {
+      clearTimeout(lastSetTimeoutId);
+    }
+    lastSetTimeoutId = setTimeout(function(){
+      var count = Object
+        .keys(buttonStatus)
+        .map(function(v) { return buttonStatus[v]; })
+        .filter(function(v){ return v != 'up'; })
+        .length;
+      if(count == 0) {
+        // game.fps = 1;
+        game.pause();
+      }
+    }, 3000);
+  }
 };
 
 fromNative.gotoPosition = function(arg) {
@@ -255,4 +296,4 @@ var notifyToNative = function(methodName, values) {
   }
 };
 
-console.log('version: 2');
+console.log('version: 4');

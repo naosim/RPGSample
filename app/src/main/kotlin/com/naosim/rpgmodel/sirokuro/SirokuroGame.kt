@@ -1,14 +1,13 @@
 package com.naosim.rpgmodel.sirokuro
 
 import android.util.Log
+import com.naosim.rpgmodel.lib.GameMain
 import com.naosim.rpgmodel.lib.script.MessageScriptController
+import com.naosim.rpgmodel.lib.value.Item
 import com.naosim.rpgmodel.lib.value.field.PositionAndDirection
 import com.naosim.rpgmodel.lib.viewmodel.FieldViewModel
 import com.naosim.rpgmodel.lib.viewmodel.FieldViewModelFactory
-import com.naosim.rpgmodel.sirokuro.charactor.EventTargetType
-import com.naosim.rpgmodel.sirokuro.charactor.KuroYagi
-import com.naosim.rpgmodel.sirokuro.charactor.Player
-import com.naosim.rpgmodel.sirokuro.charactor.SiroYagi
+import com.naosim.rpgmodel.sirokuro.charactor.*
 import com.naosim.rpgmodel.sirokuro.global.DataSaveRepository
 import com.naosim.rpgmodel.sirokuro.global.GlobalContainer
 import com.naosim.rpgmodel.sirokuro.map.YagiFieldMap
@@ -18,8 +17,8 @@ class SirokuroGame(
         val fieldViewModelFactory: FieldViewModelFactory,
         val messageScriptController: MessageScriptController,
         val dataSaveRepository: DataSaveRepository
-) {
-    val fieldViewModel: FieldViewModel
+): GameMain {
+    override val fieldViewModel: FieldViewModel
     val kuro: KuroYagi
     val siro: SiroYagi
     val player: Player
@@ -27,7 +26,7 @@ class SirokuroGame(
 
     var isJump = false;
 
-    private val globalContainer: GlobalContainer
+    val globalContainer: GlobalContainer
 
     init {
         val dataSaveContainer = dataSaveRepository.load()
@@ -39,8 +38,6 @@ class SirokuroGame(
                     updatePositionAndDirection(positionAndDirection)
                 }
         )
-
-
 
         this.globalContainer = GlobalContainer(
                 messageScriptController,
@@ -55,24 +52,32 @@ class SirokuroGame(
         this.player = Player(globalContainer)
     }
 
-    fun onDestroy() {
+    override fun onDestroy() {
         Log.e(this.javaClass.simpleName, "onDestroy")
         dataSaveRepository.save(globalContainer.getDataSaveContainer())
     }
 
-    fun onPressAButton() {
+    override fun onPressAButton() {
         fieldViewModel.getPositionAndDirection {
-            val position = it.position
-            Log.e("SirokuroGame", "${position.fieldName.value}:${position.x.value}, ${position.y.value}, ${it.direction.name}")
-            yagiFieldMap.getCheckEventTarget(it)?.let {
-                when(it) {
-                    EventTargetType.kuro -> kuro.check()
-                    EventTargetType.siro -> siro.check()
-                }
-
+            when(yagiFieldMap.getCheckEventTarget(it)) {
+                EventTargetType.kuro -> kuro.check()
+                EventTargetType.siro -> siro.check()
             }
         }
+    }
 
+    override fun onItemUsed(item: Item) {
+        val gameItem = getGameItem(item.itemId)
+        fieldViewModel.getPositionAndDirection {
+            val isUsedItem: Boolean = when(yagiFieldMap.getCheckEventTarget(it)) {
+                EventTargetType.kuro -> kuro.useItem(gameItem)
+                EventTargetType.siro -> siro.useItem(gameItem)
+                else -> false
+            }
+            if(!isUsedItem) {
+                player.useItem(gameItem)
+            }
+        }
     }
 
     fun initFieldViewModel(fieldViewModel: FieldViewModel) {
@@ -100,6 +105,10 @@ class SirokuroGame(
         } else {
             isJump = false
         }
+    }
+
+    override fun getItemList(): List<Item> {
+        return globalContainer.itemSet.list
     }
 
 }
