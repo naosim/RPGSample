@@ -69,10 +69,13 @@ class SirokuroGame(
     override fun onItemUsed(item: Item) {
         val gameItem = getGameItem(item.itemId)
         fieldViewModel.getPositionAndDirection {
-            when(yagiFieldMap.getCheckEventTarget(it)) {
+            val isUsedItem: Boolean = when(yagiFieldMap.getCheckEventTarget(it)) {
                 EventTargetType.kuro -> kuro.useItem(gameItem)
                 EventTargetType.siro -> siro.useItem(gameItem)
-                else -> player.useItem(gameItem)
+                else -> false
+            }
+            if(!isUsedItem) {
+                player.useItem(gameItem)
             }
         }
     }
