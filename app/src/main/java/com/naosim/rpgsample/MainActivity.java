@@ -9,15 +9,15 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
 
-import com.naosim.rpgmodel.android.FieldViewModelFactoryImpl;
-import com.naosim.rpgmodel.android.GamePadView;
-import com.naosim.rpgmodel.android.MessageViewModelImpl;
 import com.naosim.rpgmodel.android.sirokuro.DataSaveRepositoryAndroidImpl;
-import com.naosim.rpgmodel.lib.GameMain;
-import com.naosim.rpgmodel.lib.script.MessageScriptController;
-import com.naosim.rpgmodel.lib.value.Item;
-import com.naosim.rpgmodel.lib.viewmodel.FieldViewModelFactory;
-import com.naosim.rpgmodel.lib.viewmodel.MessageViewModel;
+import com.naosim.rpgmodel.lib.android.FieldViewModelFactoryImpl;
+import com.naosim.rpgmodel.lib.android.GamePadView;
+import com.naosim.rpgmodel.lib.android.MessageViewModelImpl;
+import com.naosim.rpgmodel.lib.model.GameMain;
+import com.naosim.rpgmodel.lib.model.script.MessageScriptController;
+import com.naosim.rpgmodel.lib.model.value.Item;
+import com.naosim.rpgmodel.lib.model.viewmodel.FieldViewModelFactory;
+import com.naosim.rpgmodel.lib.model.viewmodel.MessageViewModel;
 import com.naosim.rpgmodel.sirokuro.SirokuroGame;
 
 import java.util.Date;

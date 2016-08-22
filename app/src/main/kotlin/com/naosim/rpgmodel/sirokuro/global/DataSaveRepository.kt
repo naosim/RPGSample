@@ -1,7 +1,7 @@
 package com.naosim.rpgmodel.sirokuro.global
 
-import com.naosim.rpgmodel.lib.value.ItemSet
-import com.naosim.rpgmodel.lib.value.field.Position
+import com.naosim.rpgmodel.lib.model.value.ItemSet
+import com.naosim.rpgmodel.lib.model.value.field.Position
 import com.naosim.rpgmodel.sirokuro.charactor.GameItem
 
 interface DataSaveRepository {

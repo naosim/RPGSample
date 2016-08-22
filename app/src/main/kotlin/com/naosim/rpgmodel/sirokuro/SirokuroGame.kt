@@ -1,12 +1,12 @@
 package com.naosim.rpgmodel.sirokuro
 
 import android.util.Log
-import com.naosim.rpgmodel.lib.GameMain
-import com.naosim.rpgmodel.lib.script.MessageScriptController
-import com.naosim.rpgmodel.lib.value.Item
-import com.naosim.rpgmodel.lib.value.field.PositionAndDirection
-import com.naosim.rpgmodel.lib.viewmodel.FieldViewModel
-import com.naosim.rpgmodel.lib.viewmodel.FieldViewModelFactory
+import com.naosim.rpgmodel.lib.model.GameMain
+import com.naosim.rpgmodel.lib.model.script.MessageScriptController
+import com.naosim.rpgmodel.lib.model.value.Item
+import com.naosim.rpgmodel.lib.model.value.field.PositionAndDirection
+import com.naosim.rpgmodel.lib.model.viewmodel.FieldViewModel
+import com.naosim.rpgmodel.lib.model.viewmodel.FieldViewModelFactory
 import com.naosim.rpgmodel.sirokuro.charactor.*
 import com.naosim.rpgmodel.sirokuro.global.DataSaveRepository
 import com.naosim.rpgmodel.sirokuro.global.GlobalContainer

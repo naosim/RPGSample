@@ -1,12 +1,12 @@
 package com.naosim.rpgmodel.android.sirokuro
 
 import android.content.SharedPreferences
-import com.naosim.rpgmodel.lib.value.ItemId
-import com.naosim.rpgmodel.lib.value.ItemSet
-import com.naosim.rpgmodel.lib.value.field.FieldNameImpl
-import com.naosim.rpgmodel.lib.value.field.Position
-import com.naosim.rpgmodel.lib.value.field.X
-import com.naosim.rpgmodel.lib.value.field.Y
+import com.naosim.rpgmodel.lib.model.value.ItemId
+import com.naosim.rpgmodel.lib.model.value.ItemSet
+import com.naosim.rpgmodel.lib.model.value.field.FieldNameImpl
+import com.naosim.rpgmodel.lib.model.value.field.Position
+import com.naosim.rpgmodel.lib.model.value.field.X
+import com.naosim.rpgmodel.lib.model.value.field.Y
 import com.naosim.rpgmodel.sirokuro.charactor.GameItem
 import com.naosim.rpgmodel.sirokuro.charactor.getGameItem
 import com.naosim.rpgmodel.sirokuro.global.DataSaveContainer

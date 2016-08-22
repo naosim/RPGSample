@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.naosim.rpgmodel.lib.value.Item;
+import com.naosim.rpgmodel.lib.model.value.Item;
 
 import java.util.List;
 

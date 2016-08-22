@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.naosim.rpgmodel.lib.value.Item;
+import com.naosim.rpgmodel.lib.model.value.Item;
 
 import java.util.List;
 

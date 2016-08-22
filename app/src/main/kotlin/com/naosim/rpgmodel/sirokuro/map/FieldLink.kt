@@ -1,7 +1,7 @@
 package com.naosim.rpgmodel.sirokuro.map
 
-import com.naosim.rpgmodel.lib.value.field.Position
-import com.naosim.rpgmodel.lib.viewmodel.FieldViewModel
+import com.naosim.rpgmodel.lib.model.value.field.Position
+import com.naosim.rpgmodel.lib.model.viewmodel.FieldViewModel
 
 class FieldLink(val position1: Position, val position2: Position)
 

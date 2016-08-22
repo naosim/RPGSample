@@ -1,6 +1,6 @@
 package com.naosim.rpgmodel.sirokuro.map
 
-import com.naosim.rpgmodel.lib.value.field.*
+import com.naosim.rpgmodel.lib.model.value.field.*
 import com.naosim.rpgmodel.sirokuro.charactor.EventTargetType
 import java.util.*
 
