@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.naosim.rpgmodel.android.sirokuro.DataSaveRepositoryAndroidImpl;
 import com.naosim.rpgmodel.lib.android.FieldViewModelFactoryImpl;
 import com.naosim.rpgmodel.lib.android.GamePadView;
+import com.naosim.rpgmodel.lib.android.ItemSelectDialogFactory;
 import com.naosim.rpgmodel.lib.android.MessageViewModelImpl;
 import com.naosim.rpgmodel.lib.model.GameMain;
 import com.naosim.rpgmodel.lib.model.script.MessageScriptController;
@@ -22,9 +23,13 @@ import com.naosim.rpgmodel.sirokuro.SirokuroGame;
 
 import java.util.Date;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
+
 public class MainActivity extends AppCompatActivity {
     GameMain gameMain;
     private WebView webView;
+    private final ItemSelectDialogFactory itemSelectDialogFactory = new ItemSelectDialogFactory();
 
     static GameMain createGameMain(
             FieldViewModelFactory fieldViewModelFactory,
@@ -93,10 +98,11 @@ public class MainActivity extends AppCompatActivity {
         gamepadView.getBButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ItemSelectDialog.showItemListDialog(v.getContext(), gameMain.getItemList(), new ItemSelectDialog.OnItemSelectedListener() {
+                itemSelectDialogFactory.showItemListDialog(v.getContext(), gameMain.getItemList(), new Function1<Item, Unit>() {
                     @Override
-                    public void onItemSelected(Item item) {
+                    public Unit invoke(Item item) {
                         gameMain.onItemUsed(item);
+                        return null;
                     }
                 });
             }
