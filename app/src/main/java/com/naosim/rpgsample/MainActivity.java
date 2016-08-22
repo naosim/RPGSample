@@ -24,6 +24,7 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     GameMain gameMain;
+    private WebView webView;
 
     static GameMain createGameMain(
             FieldViewModelFactory fieldViewModelFactory,
@@ -71,9 +72,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        this.webView = createWebView();
+
         // GAME MAIN　生成
         this.gameMain = createGameMain(
-                new FieldViewModelFactoryImpl(createWebView()),
+                new FieldViewModelFactoryImpl(this.webView),
                 c,
                 getSharedPreferences("hoge", Context.MODE_PRIVATE)
         );
@@ -101,9 +104,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        webView.resumeTimers();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         this.gameMain.onDestroy();
+        webView.pauseTimers();
     }
 
     @Override
