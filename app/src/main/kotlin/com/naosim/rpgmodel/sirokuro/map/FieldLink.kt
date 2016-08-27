@@ -1,12 +1,14 @@
 package com.naosim.rpgmodel.sirokuro.map
 
 import com.naosim.rpgmodel.lib.model.value.field.Position
-import com.naosim.rpgmodel.lib.model.viewmodel.BGMPlayModel
 import com.naosim.rpgmodel.lib.model.viewmodel.FieldViewModel
+import com.naosim.rpgmodel.lib.model.viewmodel.sound.bgm.BGMPlayModel
+import com.naosim.rpgmodel.lib.model.viewmodel.sound.se.SEPlayModel
+import com.naosim.rpgmodel.sirokuro.SirokuroSE
 
 class FieldLink(val position1: Position, val position2: Position)
 
-fun jump(currentPos: Position, fieldViewModel: FieldViewModel, bgmPlayModel: BGMPlayModel, yagiFieldMap: YagiFieldMap, list: List<FieldLink>): Boolean {
+fun jump(currentPos: Position, fieldViewModel: FieldViewModel, bgmPlayModel: BGMPlayModel, sePlayModel: SEPlayModel, yagiFieldMap: YagiFieldMap, list: List<FieldLink>): Boolean {
     var result = false
     //left
     list
@@ -20,6 +22,7 @@ fun jump(currentPos: Position, fieldViewModel: FieldViewModel, bgmPlayModel: BGM
                 } else {
                     bgmPlayModel.stop()
                 }
+                sePlayModel.play(SirokuroSE.se1)
 
                 result = true
             }
@@ -36,6 +39,8 @@ fun jump(currentPos: Position, fieldViewModel: FieldViewModel, bgmPlayModel: BGM
                 } else {
                     bgmPlayModel.stop()
                 }
+                sePlayModel.play(SirokuroSE.se1)
+
                 result = true
             }
 

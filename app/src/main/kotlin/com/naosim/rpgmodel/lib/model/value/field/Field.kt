@@ -1,6 +1,6 @@
 package com.naosim.rpgmodel.lib.model.value.field
 
-import com.naosim.rpgmodel.lib.model.viewmodel.HasBGM
+import com.naosim.rpgmodel.lib.model.viewmodel.sound.bgm.HasBGM
 
 class Field(
         val fieldName: FieldName,

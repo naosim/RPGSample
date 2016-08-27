@@ -5,9 +5,10 @@ import com.naosim.rpgmodel.lib.model.GameMain
 import com.naosim.rpgmodel.lib.model.script.MessageScriptController
 import com.naosim.rpgmodel.lib.model.value.Item
 import com.naosim.rpgmodel.lib.model.value.field.PositionAndDirection
-import com.naosim.rpgmodel.lib.model.viewmodel.BGMPlayModel
 import com.naosim.rpgmodel.lib.model.viewmodel.FieldViewModel
 import com.naosim.rpgmodel.lib.model.viewmodel.FieldViewModelFactory
+import com.naosim.rpgmodel.lib.model.viewmodel.sound.bgm.BGMPlayModel
+import com.naosim.rpgmodel.lib.model.viewmodel.sound.se.SEPlayModel
 import com.naosim.rpgmodel.sirokuro.charactor.*
 import com.naosim.rpgmodel.sirokuro.global.DataSaveRepository
 import com.naosim.rpgmodel.sirokuro.global.GlobalContainer
@@ -15,10 +16,11 @@ import com.naosim.rpgmodel.sirokuro.map.YagiFieldMap
 import com.naosim.rpgmodel.sirokuro.map.jump
 
 class SirokuroGame(
-        val fieldViewModelFactory: FieldViewModelFactory,
-        val messageScriptController: MessageScriptController,
-        val dataSaveRepository: DataSaveRepository,
-        val bgmPlayModel: BGMPlayModel
+        private val fieldViewModelFactory: FieldViewModelFactory,
+        private val messageScriptController: MessageScriptController,
+        private val dataSaveRepository: DataSaveRepository,
+        private val bgmPlayModel: BGMPlayModel,
+        private val sePlayModel: SEPlayModel
 ): GameMain {
     override val fieldViewModel: FieldViewModel
     val kuro: KuroYagi
@@ -48,7 +50,8 @@ class SirokuroGame(
                 dataSaveContainer.itemSet,
                 this.fieldViewModel,
                 dataSaveContainer.position,
-                bgmPlayModel
+                bgmPlayModel,
+                sePlayModel
         )
 
         this.kuro = KuroYagi(globalContainer)
@@ -115,6 +118,7 @@ class SirokuroGame(
                     position,
                     fieldViewModel,
                     globalContainer.bgmPlayModel,
+                    globalContainer.sePlayModel,
                     yagiFieldMap,
                     yagiFieldMap.linkList
             )

@@ -16,17 +16,17 @@ import com.naosim.rpgmodel.lib.android.GamePadView;
 import com.naosim.rpgmodel.lib.android.ItemSelectDialogFactory;
 import com.naosim.rpgmodel.lib.android.MessageViewModelImpl;
 import com.naosim.rpgmodel.lib.android.SEPlayModelCore;
+import com.naosim.rpgmodel.lib.android.SEPlayModelImpl;
 import com.naosim.rpgmodel.lib.model.GameMain;
 import com.naosim.rpgmodel.lib.model.script.MessageScriptController;
 import com.naosim.rpgmodel.lib.model.value.Item;
-import com.naosim.rpgmodel.lib.model.viewmodel.BGMPlayModel;
 import com.naosim.rpgmodel.lib.model.viewmodel.FieldViewModelFactory;
-import com.naosim.rpgmodel.lib.model.viewmodel.HasSE;
 import com.naosim.rpgmodel.lib.model.viewmodel.MessageViewModel;
-import com.naosim.rpgmodel.lib.model.viewmodel.SE;
+import com.naosim.rpgmodel.lib.model.viewmodel.sound.bgm.BGMPlayModel;
+import com.naosim.rpgmodel.lib.model.viewmodel.sound.se.HasSE;
+import com.naosim.rpgmodel.lib.model.viewmodel.sound.se.SEPlayModel;
 import com.naosim.rpgmodel.sirokuro.SirokuroGame;
-
-import org.jetbrains.annotations.NotNull;
+import com.naosim.rpgmodel.sirokuro.SirokuroSE;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,19 +40,22 @@ public class MainActivity extends AppCompatActivity {
     WebView webView;
     final ItemSelectDialogFactory itemSelectDialogFactory = new ItemSelectDialogFactory();
     BGMPlayModelImpl bgmPlayModelImpl;
+    SEPlayModelImpl sePlayModelImpl;
     SEPlayModelCore sePlayModelCore;
 
     static GameMain createGameMain(
             FieldViewModelFactory fieldViewModelFactory,
             MessageScriptController messageScriptController,
             SharedPreferences sharedPreferences,
-            BGMPlayModel bgmPlayModel
+            BGMPlayModel bgmPlayModel,
+            SEPlayModel sePlayModel
     ) {
         return new SirokuroGame(
                 fieldViewModelFactory,
                 messageScriptController,
                 new DataSaveRepositoryAndroidImpl(sharedPreferences),
-                bgmPlayModel
+                bgmPlayModel,
+                sePlayModel
         );
     }
 
@@ -95,14 +98,19 @@ public class MainActivity extends AppCompatActivity {
 
         this.webView = createWebView();
         this.bgmPlayModelImpl =  new BGMPlayModelImpl(this);
-//        this.bgmSoundPlayModel =  new BGMSoundPlayModelImpl(getApplicationContext());
+
+        List<HasSE> list = new ArrayList<>();
+        list.add(SirokuroSE.se1);
+        sePlayModelCore = new SEPlayModelCore(this, list);
+        sePlayModelImpl = new SEPlayModelImpl(sePlayModelCore);
 
         // GAME MAIN　生成
         this.gameMain = createGameMain(
                 new FieldViewModelFactoryImpl(this.webView),
                 c,
                 getSharedPreferences(),
-                this.bgmPlayModelImpl
+                this.bgmPlayModelImpl,
+                sePlayModelImpl
         );
 
         // ゲームパッド
@@ -133,34 +141,10 @@ public class MainActivity extends AppCompatActivity {
                 boolean newIsOn = !bgmPlayModelImpl.isOn();
                 bgmPlayModelImpl.setOn(newIsOn);
                 getSharedPreferences().edit().putBoolean("isBGMOn", newIsOn).commit();
+                getSharedPreferences().edit().putBoolean("isSEOn", newIsOn).commit();
 //                sePlayModelCore.play(SETest.se1);
             }
         });
-
-
-        List<HasSE> list = new ArrayList<>();
-        list.add(SETest.se1);
-        sePlayModelCore = new SEPlayModelCore(
-                this,
-                list
-        );
-
-
-    }
-
-    enum SETest implements HasSE {
-        se1("se_maoudamashii_retro22.mp3");
-        private final String fileName;
-
-        SETest(String fileName) {
-            this.fileName = fileName;
-        }
-
-        @NotNull
-        @Override
-        public SE getSe() {
-            return new SE(fileName);
-        }
     }
 
     @Override
@@ -168,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         gameMain.onStart();
         bgmPlayModelImpl.setOn(getSharedPreferences().getBoolean("isBGMOn", true));
+        sePlayModelImpl.setOn(getSharedPreferences().getBoolean("isSEOn", true));
     }
 
     @Override

@@ -2,8 +2,8 @@ package com.naosim.rpgmodel.lib.android
 
 import android.content.Context
 import android.media.MediaPlayer
-import com.naosim.rpgmodel.lib.model.viewmodel.BGMPlayModel
-import com.naosim.rpgmodel.lib.model.viewmodel.HasBGM
+import com.naosim.rpgmodel.lib.model.viewmodel.sound.bgm.BGMPlayModel
+import com.naosim.rpgmodel.lib.model.viewmodel.sound.bgm.HasBGM
 
 class BGMPlayModelImpl(
         val context: Context,
@@ -45,10 +45,6 @@ class BGMPlayModelImpl(
     override fun stop() {
         bgmPlayModel.stop()
     }
-}
-
-enum class SoundPlayModelState {
-    on, off
 }
 
 class BGMPlayModelContext(val context: Context) {

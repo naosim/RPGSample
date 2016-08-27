@@ -2,61 +2,49 @@ package com.naosim.rpgmodel.lib.android
 
 import android.content.Context
 import android.media.AudioAttributes
-import android.media.MediaPlayer
 import android.media.SoundPool
-import com.naosim.rpgmodel.lib.model.viewmodel.HasSE
-import com.naosim.rpgmodel.lib.model.viewmodel.SEPlayModel
+import com.naosim.rpgmodel.lib.model.viewmodel.sound.se.HasSE
+import com.naosim.rpgmodel.lib.model.viewmodel.sound.se.SEPlayModel
 import java.util.*
 
 class SEPlayModelImpl (
         val sePlayModelCore: SEPlayModelCore,
         val sePlayModelOnFactory: (SEPlayModelContext) -> SEPlayModelOn,
         val sePlayModelOffFactory: (SEPlayModelContext) -> SEPlayModelOff
-): SEPlayModel, SEPlayModelImplStateUpdater {
-    var sePlayModel: SEPlayModel = SEPlayModelOff(SEPlayModelContext(sePlayModelCore, this))
+): SEPlayModel {
+    val bgmPlayModelContext = SEPlayModelContext(sePlayModelCore)
+    var sePlayModel: SEPlayModel = SEPlayModelOff(bgmPlayModelContext)
+    var isOn: Boolean = false
+        get
+        set(value) {
+            if(field == value) {
+                return
+            }
+
+            sePlayModel = if(value) {
+                sePlayModelOnFactory.invoke(bgmPlayModelContext)
+            } else {
+                sePlayModelOffFactory.invoke(bgmPlayModelContext)
+            }
+            field = value
+        }
+
     constructor(sePlayModelCore: SEPlayModelCore) :this(
             sePlayModelCore,
             { SEPlayModelOn(it) },
             { SEPlayModelOff(it) }
     )
 
-    override fun updateSEPlayModel(soundPlayModelState: SoundPlayModelState, sePlayModelContext: SEPlayModelContext) {
-        this.sePlayModel = when(soundPlayModelState) {
-            SoundPlayModelState.on -> sePlayModelOnFactory.invoke(sePlayModelContext)
-            SoundPlayModelState.off -> sePlayModelOffFactory.invoke(sePlayModelContext)
-        }
-    }
-
     override fun play(hasSE: HasSE) {
         sePlayModel.play(hasSE)
     }
 
-    override fun setIsOn(isOn: Boolean) {
-        sePlayModel.setIsOn(isOn)
-    }
-
-    override fun isOn(): Boolean {
-        return sePlayModel.isOn()
+    fun release() {
+        this.sePlayModelCore.release()
     }
 }
 
-fun createSoundPool(): SoundPool {
-    val audioAttributes = AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME)// USAGE_MEDIA
-            // USAGE_GAME
-            .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)// CONTENT_TYPE_MUSIC
-            // CONTENT_TYPE_SPEECH, etc.
-            .build()
-    return SoundPool.Builder().setAudioAttributes(audioAttributes).setMaxStreams(2).build()
-}
-
-interface SEPlayModelImplStateUpdater {
-    fun updateSEPlayModel(soundPlayModelState: SoundPlayModelState, sePlayModelContext: SEPlayModelContext)
-}
-
-
-class SEPlayModelContext(val sePlayModelCore: SEPlayModelCore, val sePlayModelImplStateUpdater: SEPlayModelImplStateUpdater) {
-}
-
+class SEPlayModelContext(val sePlayModelCore: SEPlayModelCore)
 
 class SEPlayModelCore(val context: Context, hasSEList: List<HasSE>) {
     private val soundPool: SoundPool
@@ -77,7 +65,6 @@ class SEPlayModelCore(val context: Context, hasSEList: List<HasSE>) {
         }
     }
 
-
     fun play(hasSE: HasSE) {
         soundIdMap.get(hasSE.se.value)?.let {
             soundPool.play(it, 1.0f, 1.0f, 0, 0, 1f)
@@ -90,33 +77,11 @@ class SEPlayModelCore(val context: Context, hasSEList: List<HasSE>) {
 }
 
 class SEPlayModelOn(val sePlayModelContext: SEPlayModelContext): SEPlayModel {
-    var mediaPlayer: MediaPlayer = MediaPlayer()
     override fun play(hasSE: HasSE) {
         sePlayModelContext.sePlayModelCore.play(hasSE)
-    }
-
-    override fun setIsOn(isOn: Boolean) {
-        if(isOn) {
-            return
-        }
-        sePlayModelContext.sePlayModelImplStateUpdater.updateSEPlayModel(SoundPlayModelState.off, sePlayModelContext)
-    }
-
-    override fun isOn(): Boolean {
-        return true
     }
 }
 
 class SEPlayModelOff(val sePlayModelContext: SEPlayModelContext): SEPlayModel {
     override fun play(hasSE: HasSE) { }
-
-    override fun setIsOn(isOn: Boolean) {
-        if(isOn) {
-            sePlayModelContext.sePlayModelImplStateUpdater.updateSEPlayModel(SoundPlayModelState.on, sePlayModelContext)
-        }
-    }
-
-    override fun isOn(): Boolean {
-        return false
-    }
 }

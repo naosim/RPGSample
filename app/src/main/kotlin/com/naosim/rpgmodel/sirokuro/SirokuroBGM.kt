@@ -1,7 +1,7 @@
 package com.naosim.rpgmodel.sirokuro
 
-import com.naosim.rpgmodel.lib.model.viewmodel.BGM
-import com.naosim.rpgmodel.lib.model.viewmodel.HasBGM
+import com.naosim.rpgmodel.lib.model.viewmodel.sound.bgm.BGM
+import com.naosim.rpgmodel.lib.model.viewmodel.sound.bgm.HasBGM
 
 enum class SirokuroBGM(bgmName: String): HasBGM {
     bgm1("game_maoudamashii_4_field03.mp3"),
