@@ -15,15 +15,22 @@ import com.naosim.rpgmodel.lib.android.FieldViewModelFactoryImpl;
 import com.naosim.rpgmodel.lib.android.GamePadView;
 import com.naosim.rpgmodel.lib.android.ItemSelectDialogFactory;
 import com.naosim.rpgmodel.lib.android.MessageViewModelImpl;
+import com.naosim.rpgmodel.lib.android.SEPlayModelCore;
 import com.naosim.rpgmodel.lib.model.GameMain;
 import com.naosim.rpgmodel.lib.model.script.MessageScriptController;
 import com.naosim.rpgmodel.lib.model.value.Item;
 import com.naosim.rpgmodel.lib.model.viewmodel.BGMSoundPlayModel;
 import com.naosim.rpgmodel.lib.model.viewmodel.FieldViewModelFactory;
+import com.naosim.rpgmodel.lib.model.viewmodel.HasSE;
 import com.naosim.rpgmodel.lib.model.viewmodel.MessageViewModel;
+import com.naosim.rpgmodel.lib.model.viewmodel.SE;
 import com.naosim.rpgmodel.sirokuro.SirokuroGame;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
@@ -33,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     WebView webView;
     final ItemSelectDialogFactory itemSelectDialogFactory = new ItemSelectDialogFactory();
     BGMSoundPlayModel bgmSoundPlayModel;
-
+    SEPlayModelCore sePlayModelCore;
 
     static GameMain createGameMain(
             FieldViewModelFactory fieldViewModelFactory,
@@ -124,8 +131,34 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 bgmSoundPlayModel.setIsOn(!bgmSoundPlayModel.isOn());
+                sePlayModelCore.play(SETest.se1);
             }
         });
+
+
+        List<HasSE> list = new ArrayList<>();
+        list.add(SETest.se1);
+        sePlayModelCore = new SEPlayModelCore(
+                this,
+                list
+        );
+
+
+    }
+
+    enum SETest implements HasSE {
+        se1("se_maoudamashii_retro22.mp3");
+        private final String fileName;
+
+        SETest(String fileName) {
+            this.fileName = fileName;
+        }
+        
+        @NotNull
+        @Override
+        public SE getSe() {
+            return new SE(fileName);
+        }
     }
 
     @Override
@@ -157,5 +190,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         this.gameMain.onDestroy();
+        sePlayModelCore.release();
     }
 }

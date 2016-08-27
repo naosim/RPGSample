@@ -15,6 +15,12 @@ interface BGMSoundPlayModel {
     fun isOn(): Boolean
 }
 
+interface SEPlayModel {
+    fun play(hasSE: HasSE)
+    fun setIsOn(isOn: Boolean)
+    fun isOn(): Boolean
+}
+
 class BGM(override val value: String) : ValueImutable<String>
 class SE(override val value: String) : ValueImutable<String>
 interface HasBGM {
