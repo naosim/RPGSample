@@ -1,8 +1,8 @@
 package com.naosim.rpgmodel.sirokuro.charactor
 
-import com.naosim.rpgmodel.lib.model.value.Item
-import com.naosim.rpgmodel.lib.model.value.ItemId
-import com.naosim.rpgmodel.lib.model.value.ItemName
+import com.naosim.rpglib.model.value.Item
+import com.naosim.rpglib.model.value.ItemId
+import com.naosim.rpglib.model.value.ItemName
 
 enum class GameItem(): Item {
     やくそう, くろやぎさんの手紙, しろやぎさんの手紙;

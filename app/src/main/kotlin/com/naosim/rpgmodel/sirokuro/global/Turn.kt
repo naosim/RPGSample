@@ -1,7 +1,7 @@
 package com.naosim.rpgmodel.sirokuro.global
 
-import com.naosim.rpgmodel.lib.model.value.Value
-import com.naosim.rpgmodel.lib.model.value.ValueUpdater
+import com.naosim.rpglib.model.value.Value
+import com.naosim.rpglib.model.value.ValueUpdater
 
 enum class Turn {
     kuro_eat, kuro_write, siro_eat, siro_write;
