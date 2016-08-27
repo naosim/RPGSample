@@ -35,13 +35,14 @@ class DataSaveRepositoryAndroidImpl(val sharedPreferences: SharedPreferences): D
                 Y(sharedPreferences.getInt("y", 0))
         )
 
-        return DataSaveContainer(status, itemSet, position)
+        val isBGMOn = sharedPreferences.getBoolean("isBGMOn", true)
+
+        return DataSaveContainer(status, itemSet, position, isBGMOn)
     }
 
     override fun save(dataSaveContainer: DataSaveContainer) {
         val editor = sharedPreferences.edit()
         editor.putString("turn", dataSaveContainer.status.turnValue.getValueString())
-        // TODO impl
         val itemCsv = dataSaveContainer
                 .itemSet
                 .list
@@ -53,8 +54,20 @@ class DataSaveRepositoryAndroidImpl(val sharedPreferences: SharedPreferences): D
         editor.putInt("x", dataSaveContainer.position.x.value)
         editor.putInt("y", dataSaveContainer.position.y.value)
 
+        editor.putBoolean("isBGMOn", dataSaveContainer.isBGMOn)
+
         editor.commit()
 
+    }
+
+    fun saveIsBGMOn(isBGMOn: Boolean) {
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("isBGMOn", isBGMOn)
+        editor.commit()
+    }
+
+    fun loadIsBGMOn(): Boolean {
+        return sharedPreferences.getBoolean("isBGMOn", true)
     }
 
 }

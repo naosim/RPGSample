@@ -9,4 +9,9 @@ interface DataSaveRepository {
     fun load(): DataSaveContainer
 }
 
-class DataSaveContainer(val status: Status, val itemSet: ItemSet<GameItem>, val position: Position)
+class DataSaveContainer(
+        val status: Status,
+        val itemSet: ItemSet<GameItem>,
+        val position: Position,
+        val isBGMOn: Boolean
+)
