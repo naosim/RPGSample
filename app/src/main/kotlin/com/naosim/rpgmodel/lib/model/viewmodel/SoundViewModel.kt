@@ -7,8 +7,16 @@ interface SoundPlayModel {
     fun playSE(hasSE: HasSE, callback: () -> Unit = {})
 }
 
-class BGM(override val value: Long) : ValueImutable<Long>
-class SE(override val value: Long) : ValueImutable<Long>
+interface BGMSoundPlayModel {
+    fun play(hasBGM: HasBGM)
+    fun restart()
+    fun stop()
+    fun setIsOn(isOn: Boolean)
+    fun isOn(): Boolean
+}
+
+class BGM(override val value: String) : ValueImutable<String>
+class SE(override val value: String) : ValueImutable<String>
 interface HasBGM {
     val bgm: BGM
 }
