@@ -8,5 +8,7 @@ interface GameMain {
     fun getItemList(): List<Item>
     fun onPressAButton()
     fun onItemUsed(item: Item)
-    fun onDestroy()
+    fun onStart(){}
+    fun onStop(){}
+    fun onDestroy(){}
 }
