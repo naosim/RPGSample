@@ -1,12 +1,14 @@
 package com.naosim.rpgmodel.sirokuro
 
 import android.util.Log
-import com.naosim.rpgmodel.lib.GameMain
-import com.naosim.rpgmodel.lib.script.MessageScriptController
-import com.naosim.rpgmodel.lib.value.Item
-import com.naosim.rpgmodel.lib.value.field.PositionAndDirection
-import com.naosim.rpgmodel.lib.viewmodel.FieldViewModel
-import com.naosim.rpgmodel.lib.viewmodel.FieldViewModelFactory
+import com.naosim.rpgmodel.lib.model.GameMain
+import com.naosim.rpgmodel.lib.model.script.MessageScriptController
+import com.naosim.rpgmodel.lib.model.value.Item
+import com.naosim.rpgmodel.lib.model.value.field.PositionAndDirection
+import com.naosim.rpgmodel.lib.model.viewmodel.FieldViewModel
+import com.naosim.rpgmodel.lib.model.viewmodel.FieldViewModelFactory
+import com.naosim.rpgmodel.lib.model.viewmodel.sound.bgm.BGMPlayModel
+import com.naosim.rpgmodel.lib.model.viewmodel.sound.se.SEPlayModel
 import com.naosim.rpgmodel.sirokuro.charactor.*
 import com.naosim.rpgmodel.sirokuro.global.DataSaveRepository
 import com.naosim.rpgmodel.sirokuro.global.GlobalContainer
@@ -14,9 +16,11 @@ import com.naosim.rpgmodel.sirokuro.map.YagiFieldMap
 import com.naosim.rpgmodel.sirokuro.map.jump
 
 class SirokuroGame(
-        val fieldViewModelFactory: FieldViewModelFactory,
-        val messageScriptController: MessageScriptController,
-        val dataSaveRepository: DataSaveRepository
+        private val fieldViewModelFactory: FieldViewModelFactory,
+        private val messageScriptController: MessageScriptController,
+        private val dataSaveRepository: DataSaveRepository,
+        private val bgmPlayModel: BGMPlayModel,
+        private val sePlayModel: SEPlayModel
 ): GameMain {
     override val fieldViewModel: FieldViewModel
     val kuro: KuroYagi
@@ -29,7 +33,7 @@ class SirokuroGame(
     val globalContainer: GlobalContainer
 
     init {
-        val dataSaveContainer = dataSaveRepository.load()
+
         this.fieldViewModel = fieldViewModelFactory.create(
                 {
                     initFieldViewModel(it)
@@ -39,17 +43,29 @@ class SirokuroGame(
                 }
         )
 
+        val dataSaveContainer = dataSaveRepository.load()
         this.globalContainer = GlobalContainer(
                 messageScriptController,
                 dataSaveContainer.status,
                 dataSaveContainer.itemSet,
                 this.fieldViewModel,
-                dataSaveContainer.position
+                dataSaveContainer.position,
+                bgmPlayModel,
+                sePlayModel
         )
 
         this.kuro = KuroYagi(globalContainer)
         this.siro = SiroYagi(globalContainer)
         this.player = Player(globalContainer)
+    }
+
+    override fun onStart() {
+        bgmPlayModel.restart()
+    }
+
+    override fun onStop() {
+        dataSaveRepository.save(globalContainer.getDataSaveContainer())
+        bgmPlayModel.stop()
     }
 
     override fun onDestroy() {
@@ -82,11 +98,14 @@ class SirokuroGame(
 
     fun initFieldViewModel(fieldViewModel: FieldViewModel) {
         val position = globalContainer.lastPosition
+        val field = yagiFieldMap.getField(position.fieldName)
         fieldViewModel.updateFieldAndGo(
-                yagiFieldMap.getField(position.fieldName),
+                field,
                 position.x,
                 position.y
         )
+        field.hasBGM?.let { globalContainer.bgmPlayModel.play(it) }
+
     }
 
     fun updatePositionAndDirection(positionAndDirection: PositionAndDirection) {
@@ -98,6 +117,8 @@ class SirokuroGame(
             isJump = jump(
                     position,
                     fieldViewModel,
+                    globalContainer.bgmPlayModel,
+                    globalContainer.sePlayModel,
                     yagiFieldMap,
                     yagiFieldMap.linkList
             )

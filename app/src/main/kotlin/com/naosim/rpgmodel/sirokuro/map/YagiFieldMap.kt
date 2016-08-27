@@ -1,6 +1,7 @@
 package com.naosim.rpgmodel.sirokuro.map
 
-import com.naosim.rpgmodel.lib.value.field.*
+import com.naosim.rpgmodel.lib.model.value.field.*
+import com.naosim.rpgmodel.sirokuro.SirokuroBGM
 import com.naosim.rpgmodel.sirokuro.charactor.EventTargetType
 import java.util.*
 
@@ -22,6 +23,7 @@ class YagiFieldMap {
 
     val mainField = Field(
             YagiFieldName.main,
+            SirokuroBGM.bgm2,
             // back
             FieldDataAndFieldCollisionData(
                     createFieldData(
@@ -49,6 +51,7 @@ class YagiFieldMap {
 
     val kuroField = Field(
             YagiFieldName.kuro,
+            SirokuroBGM.bgm1,
             FieldDataAndFieldCollisionData(
                     createFieldData(
                             """
@@ -101,6 +104,7 @@ class YagiFieldMap {
 
     val siroField = Field(
             YagiFieldName.siro,
+            SirokuroBGM.bgm1,
             FieldDataAndFieldCollisionData(
                     createFieldData(
                             """

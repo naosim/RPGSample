@@ -1,6 +1,6 @@
 package com.naosim.rpgmodel.sirokuro.charactor
 
-import com.naosim.rpgmodel.lib.script.ScriptUtil
+import com.naosim.rpgmodel.lib.model.script.ScriptUtil
 import com.naosim.rpgmodel.sirokuro.global.GlobalContainer
 
 class Player(globalContainer: GlobalContainer): EventableObjectCommon(globalContainer) {
