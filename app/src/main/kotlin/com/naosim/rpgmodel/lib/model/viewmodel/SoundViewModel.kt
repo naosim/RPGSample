@@ -7,12 +7,10 @@ interface SoundPlayModel {
     fun playSE(hasSE: HasSE, callback: () -> Unit = {})
 }
 
-interface BGMSoundPlayModel {
+interface BGMPlayModel {
     fun play(hasBGM: HasBGM)
     fun restart()
     fun stop()
-    fun setIsOn(isOn: Boolean)
-    fun isOn(): Boolean
 }
 
 interface SEPlayModel {

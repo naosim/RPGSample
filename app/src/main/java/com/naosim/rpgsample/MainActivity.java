@@ -10,7 +10,7 @@ import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.naosim.rpgmodel.android.sirokuro.DataSaveRepositoryAndroidImpl;
-import com.naosim.rpgmodel.lib.android.BGMSoundPlayModelImpl;
+import com.naosim.rpgmodel.lib.android.BGMPlayModelImpl;
 import com.naosim.rpgmodel.lib.android.FieldViewModelFactoryImpl;
 import com.naosim.rpgmodel.lib.android.GamePadView;
 import com.naosim.rpgmodel.lib.android.ItemSelectDialogFactory;
@@ -19,7 +19,7 @@ import com.naosim.rpgmodel.lib.android.SEPlayModelCore;
 import com.naosim.rpgmodel.lib.model.GameMain;
 import com.naosim.rpgmodel.lib.model.script.MessageScriptController;
 import com.naosim.rpgmodel.lib.model.value.Item;
-import com.naosim.rpgmodel.lib.model.viewmodel.BGMSoundPlayModel;
+import com.naosim.rpgmodel.lib.model.viewmodel.BGMPlayModel;
 import com.naosim.rpgmodel.lib.model.viewmodel.FieldViewModelFactory;
 import com.naosim.rpgmodel.lib.model.viewmodel.HasSE;
 import com.naosim.rpgmodel.lib.model.viewmodel.MessageViewModel;
@@ -39,20 +39,20 @@ public class MainActivity extends AppCompatActivity {
     GameMain gameMain;
     WebView webView;
     final ItemSelectDialogFactory itemSelectDialogFactory = new ItemSelectDialogFactory();
-    BGMSoundPlayModel bgmSoundPlayModel;
+    BGMPlayModelImpl bgmPlayModelImpl;
     SEPlayModelCore sePlayModelCore;
 
     static GameMain createGameMain(
             FieldViewModelFactory fieldViewModelFactory,
             MessageScriptController messageScriptController,
             SharedPreferences sharedPreferences,
-            BGMSoundPlayModel bgmSoundPlayModel
+            BGMPlayModel bgmPlayModel
     ) {
         return new SirokuroGame(
                 fieldViewModelFactory,
                 messageScriptController,
                 new DataSaveRepositoryAndroidImpl(sharedPreferences),
-                bgmSoundPlayModel
+                bgmPlayModel
         );
     }
 
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         this.webView = createWebView();
-        this.bgmSoundPlayModel =  new BGMSoundPlayModelImpl(this);
+        this.bgmPlayModelImpl =  new BGMPlayModelImpl(this);
 //        this.bgmSoundPlayModel =  new BGMSoundPlayModelImpl(getApplicationContext());
 
         // GAME MAIN　生成
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 new FieldViewModelFactoryImpl(this.webView),
                 c,
                 getSharedPreferences(),
-                this.bgmSoundPlayModel
+                this.bgmPlayModelImpl
         );
 
         // ゲームパッド
@@ -130,8 +130,10 @@ public class MainActivity extends AppCompatActivity {
         gamepadView.getSettingButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bgmSoundPlayModel.setIsOn(!bgmSoundPlayModel.isOn());
-                sePlayModelCore.play(SETest.se1);
+                boolean newIsOn = !bgmPlayModelImpl.isOn();
+                bgmPlayModelImpl.setOn(newIsOn);
+                getSharedPreferences().edit().putBoolean("isBGMOn", newIsOn).commit();
+//                sePlayModelCore.play(SETest.se1);
             }
         });
 
@@ -153,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         SETest(String fileName) {
             this.fileName = fileName;
         }
-        
+
         @NotNull
         @Override
         public SE getSe() {
@@ -165,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         gameMain.onStart();
+        bgmPlayModelImpl.setOn(getSharedPreferences().getBoolean("isBGMOn", true));
     }
 
     @Override

@@ -5,7 +5,7 @@ import com.naosim.rpgmodel.lib.model.GameMain
 import com.naosim.rpgmodel.lib.model.script.MessageScriptController
 import com.naosim.rpgmodel.lib.model.value.Item
 import com.naosim.rpgmodel.lib.model.value.field.PositionAndDirection
-import com.naosim.rpgmodel.lib.model.viewmodel.BGMSoundPlayModel
+import com.naosim.rpgmodel.lib.model.viewmodel.BGMPlayModel
 import com.naosim.rpgmodel.lib.model.viewmodel.FieldViewModel
 import com.naosim.rpgmodel.lib.model.viewmodel.FieldViewModelFactory
 import com.naosim.rpgmodel.sirokuro.charactor.*
@@ -18,7 +18,7 @@ class SirokuroGame(
         val fieldViewModelFactory: FieldViewModelFactory,
         val messageScriptController: MessageScriptController,
         val dataSaveRepository: DataSaveRepository,
-        val bgmSoundPlayModel: BGMSoundPlayModel
+        val bgmPlayModel: BGMPlayModel
 ): GameMain {
     override val fieldViewModel: FieldViewModel
     val kuro: KuroYagi
@@ -48,7 +48,7 @@ class SirokuroGame(
                 dataSaveContainer.itemSet,
                 this.fieldViewModel,
                 dataSaveContainer.position,
-                bgmSoundPlayModel
+                bgmPlayModel
         )
 
         this.kuro = KuroYagi(globalContainer)
@@ -57,14 +57,12 @@ class SirokuroGame(
     }
 
     override fun onStart() {
-        val dataSaveContainer = dataSaveRepository.load()
-        this.globalContainer.bgmSoundPlayModel.setIsOn(dataSaveContainer.isBGMOn)
-        bgmSoundPlayModel.restart()
+        bgmPlayModel.restart()
     }
 
     override fun onStop() {
         dataSaveRepository.save(globalContainer.getDataSaveContainer())
-        bgmSoundPlayModel.stop()
+        bgmPlayModel.stop()
     }
 
     override fun onDestroy() {
@@ -103,7 +101,7 @@ class SirokuroGame(
                 position.x,
                 position.y
         )
-        field.hasBGM?.let { globalContainer.bgmSoundPlayModel.play(it) }
+        field.hasBGM?.let { globalContainer.bgmPlayModel.play(it) }
 
     }
 
@@ -116,7 +114,7 @@ class SirokuroGame(
             isJump = jump(
                     position,
                     fieldViewModel,
-                    globalContainer.bgmSoundPlayModel,
+                    globalContainer.bgmPlayModel,
                     yagiFieldMap,
                     yagiFieldMap.linkList
             )

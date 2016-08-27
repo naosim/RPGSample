@@ -12,6 +12,5 @@ interface DataSaveRepository {
 class DataSaveContainer(
         val status: Status,
         val itemSet: ItemSet<GameItem>,
-        val position: Position,
-        val isBGMOn: Boolean
+        val position: Position
 )
