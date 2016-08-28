@@ -6,7 +6,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.widget.ImageView
 import com.naosim.rpglib.model.value.field.ArrowButtonType
-import com.naosim.rpglib.model.viewmodel.FieldViewModel
+import com.naosim.rpglib.model.viewmodel.fieldviewmodel.FieldViewModel
 
 class ArrowPadView(context: Context?, attrs: AttributeSet?) : ImageView(context, attrs) {
     var fieldViewModel: FieldViewModel? = null

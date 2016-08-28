@@ -5,8 +5,8 @@ import com.naosim.rpglib.model.GameMain
 import com.naosim.rpglib.model.script.MessageScriptController
 import com.naosim.rpglib.model.value.Item
 import com.naosim.rpglib.model.value.field.PositionAndDirection
-import com.naosim.rpglib.model.viewmodel.FieldViewModel
-import com.naosim.rpglib.model.viewmodel.FieldViewModelFactory
+import com.naosim.rpglib.model.viewmodel.fieldviewmodel.FieldViewModel
+import com.naosim.rpglib.model.viewmodel.fieldviewmodel.FieldViewModelFactory
 import com.naosim.rpglib.model.viewmodel.sound.bgm.BGMPlayModel
 import com.naosim.rpglib.model.viewmodel.sound.se.SEPlayModel
 import com.naosim.rpgmodel.sirokuro.charactor.*

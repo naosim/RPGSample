@@ -1,4 +1,4 @@
-package com.naosim.rpglib.model.viewmodel
+package com.naosim.rpglib.model.viewmodel.fieldviewmodel
 
 import com.naosim.rpglib.model.value.field.*
 

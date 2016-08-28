@@ -1,7 +1,7 @@
 package com.naosim.rpglib.model
 
 import com.naosim.rpglib.model.value.Item
-import com.naosim.rpglib.model.viewmodel.FieldViewModel
+import com.naosim.rpglib.model.viewmodel.fieldviewmodel.FieldViewModel
 
 interface GameMain {
     val fieldViewModel: FieldViewModel

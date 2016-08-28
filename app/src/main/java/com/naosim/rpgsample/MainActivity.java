@@ -7,7 +7,7 @@ import android.webkit.WebView;
 import com.naosim.rpglib.android.RPGBaseAbstractActivity;
 import com.naosim.rpglib.model.GameMain;
 import com.naosim.rpglib.model.script.MessageScriptController;
-import com.naosim.rpglib.model.viewmodel.FieldViewModelFactory;
+import com.naosim.rpglib.model.viewmodel.fieldviewmodel.FieldViewModelFactory;
 import com.naosim.rpglib.model.viewmodel.sound.bgm.BGMPlayModel;
 import com.naosim.rpglib.model.viewmodel.sound.se.HasSE;
 import com.naosim.rpglib.model.viewmodel.sound.se.SEPlayModel;

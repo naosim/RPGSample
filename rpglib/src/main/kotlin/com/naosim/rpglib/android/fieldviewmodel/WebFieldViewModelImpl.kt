@@ -1,12 +1,11 @@
-package com.naosim.rpglib.android
+package com.naosim.rpglib.android.fieldviewmodel
 
 import android.util.Log
 import android.webkit.ConsoleMessage
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import com.naosim.rpglib.model.value.field.*
-import com.naosim.rpglib.model.viewmodel.FieldViewModel
-import com.naosim.rpglib.model.viewmodel.FieldViewModelFactory
+import com.naosim.rpglib.model.viewmodel.fieldviewmodel.FieldViewModel
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -99,8 +98,3 @@ class WebFieldViewModelImpl(
     }
 }
 
-class FieldViewModelFactoryImpl(val webView: WebView): FieldViewModelFactory {
-    override fun create(onload: (FieldViewModel) -> Unit, onstep: (FieldViewModel, PositionAndDirection) -> Unit): FieldViewModel {
-        return WebFieldViewModelImpl(webView, onload, onstep)
-    }
-}
