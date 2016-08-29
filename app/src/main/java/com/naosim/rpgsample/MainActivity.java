@@ -1,62 +1,58 @@
 package com.naosim.rpgsample;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.webkit.WebView;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 
-import com.naosim.rpglib.android.RPGBaseAbstractActivity;
-import com.naosim.rpglib.model.GameMain;
-import com.naosim.rpglib.model.script.MessageScriptController;
-import com.naosim.rpglib.model.viewmodel.fieldviewmodel.FieldViewModelFactory;
-import com.naosim.rpglib.model.viewmodel.sound.bgm.BGMPlayModel;
-import com.naosim.rpglib.model.viewmodel.sound.se.HasSE;
-import com.naosim.rpglib.model.viewmodel.sound.se.SEPlayModel;
-import com.naosim.rpgmodel.android.sirokuro.DataSaveRepositoryAndroidImpl;
-import com.naosim.rpgmodel.sirokuro.SirokuroGame;
-import com.naosim.rpgmodel.sirokuro.SirokuroSE;
+import com.naosim.rpgmodel.android.sirokuro.MainActivityController;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+public class MainActivity extends AppCompatActivity {
+    private MainActivityController controller;
 
-public class MainActivity extends RPGBaseAbstractActivity {
     @Override
-    public GameMain createGameMain(
-            FieldViewModelFactory fieldViewModelFactory,
-            MessageScriptController messageScriptController,
-            SharedPreferences sharedPreferences,
-            BGMPlayModel bgmPlayModel,
-            SEPlayModel sePlayModel
-    ) {
-        return new SirokuroGame(
-                fieldViewModelFactory,
-                messageScriptController,
-                new DataSaveRepositoryAndroidImpl(sharedPreferences),
-                bgmPlayModel,
-                sePlayModel
-        );
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getActionBar() != null) getActionBar().hide();
+        if (getSupportActionBar() != null) getSupportActionBar().hide();
+
+        setContentView(com.naosim.rpglib.R.layout.activity_rpgbase);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                System.gc();
+            }
+        }, 5000);
+
+        this.controller = new MainActivityController(this);
     }
 
     @Override
-    public List<HasSE> createSEList() {
-        List<HasSE> list = new ArrayList<>();
-        list.add(SirokuroSE.se1);
-        return list;
-    }
-
-    static final String ASSET_HTML_URL = "file:///android_asset/www/index.html";
-    @Override
-    public WebView createWebView() {
-        WebView webView = (WebView)findViewById(R.id.webView);
-        webView.clearCache(true);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl(ASSET_HTML_URL + "?date=" + new Date().getTime());
-        return webView;
+    protected void onStart() {
+        super.onStart();
+        controller.onStart();
     }
 
     @Override
-    public SharedPreferences getSharedPreferences() {
-        return getSharedPreferences("hoge", Context.MODE_PRIVATE);
+    protected void onResume() {
+        super.onResume();
+        controller.onResume();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        controller.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        controller.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        controller.onDestroy();
+    }
 }
