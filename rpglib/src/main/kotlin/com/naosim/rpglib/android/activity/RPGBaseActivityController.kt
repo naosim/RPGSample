@@ -84,14 +84,21 @@ abstract class RPGBaseActivityController(val activity: Activity): ActivityLifeCy
         sePlayModelCore.release()
     }
 
+    fun createWebView(): WebView {
+        val webView = findViewById(R.id.webView) as WebView
+        webView.clearCache(true)
+        webView.settings.javaScriptEnabled = true
+        webView.loadUrl(getWebViewUrl())
+        return webView
+    }
+
     abstract fun createGameMain(
             fieldViewModelFactory: FieldViewModelFactory,
             messageScriptController: MessageScriptController,
             sharedPreferences: SharedPreferences,
             bgmPlayModel: BGMPlayModel,
             sePlayModel: SEPlayModel): GameMain
-
-    abstract fun createWebView(): WebView
+    abstract fun getWebViewUrl(): String
     abstract fun createSEList(): List<HasSE>
     abstract fun getSharedPreferences(): SharedPreferences
 }
