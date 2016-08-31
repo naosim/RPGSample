@@ -255,7 +255,7 @@ var updateMapDraw = function() {
   if(!map[currentFieldName]) {
     return;
   }
-  ['back', 'front'].forEach(fieldLayerName => {
+  ['back', 'front'].forEach(function(fieldLayerName) {
     if(!map[currentFieldName][fieldLayerName]) {
       mapGroup[fieldLayerName].loadData([[]]);
       mapGroup[fieldLayerName].collisionData = null;
@@ -270,7 +270,9 @@ var updateMapDraw = function() {
     if(map[currentFieldName][fieldLayerName].collisionData) {
       mapGroup[fieldLayerName].collisionData = map[currentFieldName][fieldLayerName].collisionData;
     } else {
-      mapGroup[fieldLayerName].collisionData = map[currentFieldName][fieldLayerName].data.map(a => a.map(() => 0));
+      mapGroup[fieldLayerName].collisionData = map[currentFieldName][fieldLayerName].data.map(function(a) {
+        return a.map(function(){ return 0 })
+      });
     }
   });
 };
