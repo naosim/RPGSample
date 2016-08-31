@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/RPGSample.iml" filepath="$PROJECT_DIR$/RPGSample.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rpglib/rpglib.iml" filepath="$PROJECT_DIR$/rpglib/rpglib.iml" />
     </modules>
   </component>
 </project>
