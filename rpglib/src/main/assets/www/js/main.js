@@ -288,6 +288,10 @@ fromNative.updateFieldLayer = function(arg) {
   updateMapDraw();
 };
 
+fromNative.call = function(arg) {
+  return {"text": "foo"}
+}
+
 var notifyToNative = function(methodName, values) {
   if(values) {
     console.log(methodName + '###' + JSON.stringify(values));

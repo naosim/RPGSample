@@ -15,7 +15,11 @@ import com.naosim.rpgmodel.sirokuro.SirokuroSE
 import java.util.*
 
 class MainActivityController(activity: Activity) : RPGBaseActivityController(activity) {
-    override fun createGameMain(fieldViewModelFactory: FieldViewModelFactory, messageScriptController: MessageScriptController, sharedPreferences: SharedPreferences, bgmPlayModel: BGMPlayModel, sePlayModel: SEPlayModel): GameMain {
+    override fun createGameMain(
+            fieldViewModelFactory: FieldViewModelFactory,
+            messageScriptController: MessageScriptController,
+            sharedPreferences: SharedPreferences, bgmPlayModel:
+            BGMPlayModel, sePlayModel: SEPlayModel): GameMain {
         return SirokuroGame(
                 fieldViewModelFactory,
                 messageScriptController,
@@ -39,3 +43,14 @@ class MainActivityController(activity: Activity) : RPGBaseActivityController(act
     }
 
 }
+
+//open public class EmptyModelConverter<A>: ModelConverter3<A, JSONObject> {
+//    override fun encode(a: A): JSONObject {
+//        return JSONObject()
+//    }
+//
+//    override fun decode(b: JSONObject): A {
+//        return null!!
+//    }
+//
+//}

@@ -96,5 +96,20 @@ class WebFieldViewModelImpl(
         webView.evaluateJavascript("fromNative.onButtonUp(\"${arrowButtonType.name}\")"){}
         Log.e("WebFieldViewModelImpl", "onButtonUp " + arrowButtonType.name)
     }
+
+    /*
+    override fun call(input: I, callback: (I) -> Unit) {
+        modelConverter?.let {
+            val inputJSON = it.encode(input)
+            webView.evaluateJavascript("fromNative.call(${inputJSON})"){
+                it?.let {
+                    val json = JSONObject(it)
+                    callback(it@modelConverter.decode(json))
+                }
+
+            }
+        }
+    }
+    */
 }
 

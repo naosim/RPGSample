@@ -23,3 +23,8 @@ interface FieldViewModel {
     }
 }
 
+interface FieldViewModelWithCall<I>: FieldViewModel, Caller<I>
+
+interface Caller<I> {
+    fun call(input: I, callback: (I) -> Unit = {})
+}
