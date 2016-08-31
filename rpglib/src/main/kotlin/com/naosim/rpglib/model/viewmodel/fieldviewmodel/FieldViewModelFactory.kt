@@ -2,9 +2,9 @@ package com.naosim.rpglib.model.viewmodel.fieldviewmodel
 
 import com.naosim.rpglib.model.value.field.PositionAndDirection
 
-interface FieldViewModelFactory {
+interface FieldViewModelFactory<F: FieldViewModel> {
     fun create(
-            onload: (FieldViewModel) -> Unit,
-            onstep: (FieldViewModel, PositionAndDirection) -> Unit
-    ): FieldViewModel
+            onload: (F) -> Unit,
+            onstep: (F, PositionAndDirection) -> Unit
+    ): F
 }

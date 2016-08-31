@@ -11,13 +11,14 @@ import com.naosim.rpglib.android.*
 import com.naosim.rpglib.android.fieldviewmodel.FieldViewModelFactoryImpl
 import com.naosim.rpglib.model.GameMain
 import com.naosim.rpglib.model.script.MessageScriptController
+import com.naosim.rpglib.model.viewmodel.fieldviewmodel.FieldViewModel
 import com.naosim.rpglib.model.viewmodel.fieldviewmodel.FieldViewModelFactory
 import com.naosim.rpglib.model.viewmodel.sound.bgm.BGMPlayModel
 import com.naosim.rpglib.model.viewmodel.sound.se.HasSE
 import com.naosim.rpglib.model.viewmodel.sound.se.SEPlayModel
 
 abstract class RPGBaseActivityController(val activity: Activity): ActivityLifeCycle {
-    internal val gameMain: GameMain
+    internal val gameMain: GameMain<FieldViewModel>
     internal val webView: WebView
     internal val itemSelectDialogFactory = ItemSelectDialogFactory()
     internal val bgmPlayModelImpl: BGMPlayModelImpl
@@ -93,11 +94,11 @@ abstract class RPGBaseActivityController(val activity: Activity): ActivityLifeCy
     }
 
     abstract fun createGameMain(
-            fieldViewModelFactory: FieldViewModelFactory,
+            fieldViewModelFactory: FieldViewModelFactory<FieldViewModel>,
             messageScriptController: MessageScriptController,
             sharedPreferences: SharedPreferences,
             bgmPlayModel: BGMPlayModel,
-            sePlayModel: SEPlayModel): GameMain
+            sePlayModel: SEPlayModel): GameMain<FieldViewModel>
     abstract fun getWebViewUrl(): String
     abstract fun createSEList(): List<HasSE>
     abstract fun getSharedPreferences(): SharedPreferences

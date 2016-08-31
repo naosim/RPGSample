@@ -16,12 +16,12 @@ import com.naosim.rpgmodel.sirokuro.map.YagiFieldMap
 import com.naosim.rpgmodel.sirokuro.map.jump
 
 class SirokuroGame(
-        private val fieldViewModelFactory: FieldViewModelFactory,
+        private val fieldViewModelFactory: FieldViewModelFactory<FieldViewModel>,
         private val messageScriptController: MessageScriptController,
         private val dataSaveRepository: DataSaveRepository,
         private val bgmPlayModel: BGMPlayModel,
         private val sePlayModel: SEPlayModel
-): GameMain {
+): GameMain<FieldViewModel> {
     override val fieldViewModel: FieldViewModel
     val kuro: KuroYagi
     val siro: SiroYagi
