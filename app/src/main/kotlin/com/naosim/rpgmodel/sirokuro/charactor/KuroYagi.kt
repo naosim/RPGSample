@@ -1,9 +1,10 @@
 package com.naosim.rpgmodel.sirokuro.charactor
 
-import com.naosim.rpgmodel.sirokuro.global.GlobalContainer
+import com.naosim.rpglib.model.gametool.GlobalContainer
+import com.naosim.rpgmodel.sirokuro.global.Status
 import com.naosim.rpgmodel.sirokuro.global.Turn
 
-class KuroYagi(globalContainer: GlobalContainer): EventableObjectCommon(globalContainer) {
+class KuroYagi(globalContainer: GlobalContainer<Status, GameItem>): EventableObjectCommon(globalContainer) {
     override fun check() {
         val self = "黒ヤギ"
         val other = "白ヤギ"

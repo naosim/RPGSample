@@ -9,14 +9,14 @@ import com.naosim.rpglib.model.value.field.X
 import com.naosim.rpglib.model.value.field.Y
 import com.naosim.rpgmodel.sirokuro.charactor.GameItem
 import com.naosim.rpgmodel.sirokuro.charactor.getGameItem
-import com.naosim.rpgmodel.sirokuro.global.DataSaveContainer
-import com.naosim.rpgmodel.sirokuro.global.DataSaveRepository
+import com.naosim.rpglib.model.gametool.DataSaveContainer
+import com.naosim.rpglib.model.gametool.DataSaveRepository
 import com.naosim.rpgmodel.sirokuro.global.Status
 import com.naosim.rpgmodel.sirokuro.global.Turn
 import com.naosim.rpgmodel.sirokuro.map.YagiFieldName
 
-class DataSaveRepositoryAndroidImpl(val sharedPreferences: SharedPreferences): DataSaveRepository {
-    override fun load(): DataSaveContainer {
+class DataSaveRepositoryAndroidImpl(val sharedPreferences: SharedPreferences): DataSaveRepository<Status, GameItem> {
+    override fun load(): DataSaveContainer<Status, GameItem> {
         val itemSet = ItemSet<GameItem>()
         val itemCsv = sharedPreferences.getString("itemCsv", "${GameItem.やくそう.itemId.value}")
 
@@ -38,7 +38,7 @@ class DataSaveRepositoryAndroidImpl(val sharedPreferences: SharedPreferences): D
         return DataSaveContainer(status, itemSet, position)
     }
 
-    override fun save(dataSaveContainer: DataSaveContainer) {
+    override fun save(dataSaveContainer: DataSaveContainer<Status, GameItem>) {
         val editor = sharedPreferences.edit()
         editor.putString("turn", dataSaveContainer.status.turnValue.getValueString())
         val itemCsv = dataSaveContainer

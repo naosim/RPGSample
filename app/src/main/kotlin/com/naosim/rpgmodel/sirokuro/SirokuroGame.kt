@@ -10,15 +10,17 @@ import com.naosim.rpglib.model.viewmodel.fieldviewmodel.FieldViewModelFactory
 import com.naosim.rpglib.model.viewmodel.sound.bgm.BGMPlayModel
 import com.naosim.rpglib.model.viewmodel.sound.se.SEPlayModel
 import com.naosim.rpgmodel.sirokuro.charactor.*
-import com.naosim.rpgmodel.sirokuro.global.DataSaveRepository
-import com.naosim.rpgmodel.sirokuro.global.GlobalContainer
+import com.naosim.rpglib.model.gametool.DataSaveRepository
+import com.naosim.rpglib.model.gametool.GlobalCommonContainer
+import com.naosim.rpglib.model.gametool.GlobalContainer
+import com.naosim.rpgmodel.sirokuro.global.Status
 import com.naosim.rpgmodel.sirokuro.map.YagiFieldMap
 import com.naosim.rpgmodel.sirokuro.map.jump
 
 class SirokuroGame(
         private val fieldViewModelFactory: FieldViewModelFactory<FieldViewModel>,
         private val messageScriptController: MessageScriptController,
-        private val dataSaveRepository: DataSaveRepository,
+        private val dataSaveRepository: DataSaveRepository<Status, GameItem>,
         private val bgmPlayModel: BGMPlayModel,
         private val sePlayModel: SEPlayModel
 ): GameMain<FieldViewModel> {
@@ -30,7 +32,7 @@ class SirokuroGame(
 
     var isJump = false;
 
-    val globalContainer: GlobalContainer
+    val globalContainer: GlobalContainer<Status, GameItem>
 
     init {
 
@@ -44,14 +46,17 @@ class SirokuroGame(
         )
 
         val dataSaveContainer = dataSaveRepository.load()
-        this.globalContainer = GlobalContainer(
+        val globalCommonContainer = GlobalCommonContainer(
                 messageScriptController,
-                dataSaveContainer.status,
-                dataSaveContainer.itemSet,
                 this.fieldViewModel,
                 dataSaveContainer.position,
                 bgmPlayModel,
                 sePlayModel
+        )
+        this.globalContainer = GlobalContainer(
+                dataSaveContainer.status,
+                dataSaveContainer.itemSet,
+                globalCommonContainer
         )
 
         this.kuro = KuroYagi(globalContainer)

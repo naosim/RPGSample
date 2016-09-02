@@ -13,7 +13,7 @@ fun createFieldData(data: String): FieldData {
             .map({ it.trim() })
             .forEach({
                 val l = ArrayList<Int>()
-                it.split(",").map({it.toInt()}).forEach { l.add(it) }
+                it.split(",").map({it.trim().toInt()}).forEach { l.add(it) }
                 result.add(l)
             })
     return FieldData(result)

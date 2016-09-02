@@ -2,9 +2,9 @@ package com.naosim.rpglib.model.value.field
 
 import com.naosim.rpglib.model.viewmodel.sound.bgm.HasBGM
 
-class Field(
-        val fieldName: FieldName,
-        val hasBGM: HasBGM? = null,
+open class Field(
+        open val fieldName: FieldName,
+        open val hasBGM: HasBGM? = null,
         private val backFieldDataAndFieldCollisionData: FieldDataAndFieldCollisionData,
         private val frontFieldDataAndFieldCollisionData: FieldDataAndFieldCollisionData? = null
 ) {

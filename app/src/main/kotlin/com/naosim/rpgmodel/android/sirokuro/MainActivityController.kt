@@ -3,6 +3,7 @@ package com.naosim.rpgmodel.android.sirokuro
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
+import com.naosim.rpg.android.mogura.MoguraDataSaveRepositoryAndroidImpl
 import com.naosim.rpglib.android.activity.RPGBaseActivityController
 import com.naosim.rpglib.model.GameMain
 import com.naosim.rpglib.model.script.MessageScriptController
@@ -11,7 +12,7 @@ import com.naosim.rpglib.model.viewmodel.fieldviewmodel.FieldViewModelFactory
 import com.naosim.rpglib.model.viewmodel.sound.bgm.BGMPlayModel
 import com.naosim.rpglib.model.viewmodel.sound.se.HasSE
 import com.naosim.rpglib.model.viewmodel.sound.se.SEPlayModel
-import com.naosim.rpgmodel.sirokuro.SirokuroGame
+import com.naosim.rpgmodel.mogura.MoguraGame
 import com.naosim.rpgmodel.sirokuro.SirokuroSE
 import java.util.*
 
@@ -21,12 +22,19 @@ class MainActivityController(activity: Activity) : RPGBaseActivityController(act
             messageScriptController: MessageScriptController,
             sharedPreferences: SharedPreferences, bgmPlayModel:
             BGMPlayModel, sePlayModel: SEPlayModel): GameMain<FieldViewModel> {
-        return SirokuroGame(
+        return MoguraGame(
                 fieldViewModelFactory,
                 messageScriptController,
-                DataSaveRepositoryAndroidImpl(sharedPreferences),
+                MoguraDataSaveRepositoryAndroidImpl(sharedPreferences),
                 bgmPlayModel,
                 sePlayModel)
+
+//        return SirokuroGame(
+//                fieldViewModelFactory,
+//                messageScriptController,
+//                DataSaveRepositoryAndroidImpl(sharedPreferences),
+//                bgmPlayModel,
+//                sePlayModel)
     }
 
     override fun getWebViewUrl(): String {
