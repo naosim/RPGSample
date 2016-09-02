@@ -164,7 +164,7 @@ game.onload = function(){
     down: false,
     left: false,
     right: false
-  }
+  };
   this.addEventListener('enterframe',function(){
     //ブラウザテスト用
     var run = function(key) {
@@ -176,7 +176,7 @@ game.onload = function(){
             fromNative.onButtonUp(key);
           }
       }
-    }
+    };
 
     run('up');
     run('down');
@@ -211,7 +211,7 @@ var buttonStatus = {
 };
 var map = {};
 
-lastSetTimeoutId = null;
+var lastSetTimeoutId = null;
 
 fromNative.getPosition = function() {
   var lastPos = player.getLastPos();
@@ -271,7 +271,7 @@ var updateMapDraw = function() {
       mapGroup[fieldLayerName].collisionData = map[currentFieldName][fieldLayerName].collisionData;
     } else {
       mapGroup[fieldLayerName].collisionData = map[currentFieldName][fieldLayerName].data.map(function(a) {
-        return a.map(function(){ return 0 })
+        return a.map(function(){ return 0; });
       });
     }
   });
@@ -291,8 +291,8 @@ fromNative.updateFieldLayer = function(arg) {
 };
 
 fromNative.call = function(arg) {
-  return {"text": "foo"}
-}
+  return {'text': 'foo'};
+};
 
 var notifyToNative = function(methodName, values) {
   if(values) {
