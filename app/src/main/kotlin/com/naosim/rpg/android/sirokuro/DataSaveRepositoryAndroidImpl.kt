@@ -1,4 +1,4 @@
-package com.naosim.rpgmodel.android.sirokuro
+package com.naosim.rpg.android.sirokuro
 
 import android.content.SharedPreferences
 import com.naosim.rpglib.model.value.ItemId
@@ -7,13 +7,13 @@ import com.naosim.rpglib.model.value.field.FieldNameImpl
 import com.naosim.rpglib.model.value.field.Position
 import com.naosim.rpglib.model.value.field.X
 import com.naosim.rpglib.model.value.field.Y
-import com.naosim.rpgmodel.sirokuro.charactor.GameItem
-import com.naosim.rpgmodel.sirokuro.charactor.getGameItem
+import com.naosim.rpg.model.sirokuro.charactor.GameItem
+import com.naosim.rpg.model.sirokuro.charactor.getGameItem
 import com.naosim.rpglib.model.gametool.DataSaveContainer
 import com.naosim.rpglib.model.gametool.DataSaveRepository
-import com.naosim.rpgmodel.sirokuro.global.Status
-import com.naosim.rpgmodel.sirokuro.global.Turn
-import com.naosim.rpgmodel.sirokuro.map.YagiFieldName
+import com.naosim.rpg.model.sirokuro.global.Status
+import com.naosim.rpg.model.sirokuro.global.Turn
+import com.naosim.rpg.model.sirokuro.map.YagiFieldName
 
 class DataSaveRepositoryAndroidImpl(val sharedPreferences: SharedPreferences): DataSaveRepository<Status, GameItem> {
     override fun load(): DataSaveContainer<Status, GameItem> {

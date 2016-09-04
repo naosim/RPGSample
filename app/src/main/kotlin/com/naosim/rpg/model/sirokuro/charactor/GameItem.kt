@@ -1,4 +1,4 @@
-package com.naosim.rpgmodel.sirokuro.charactor
+package com.naosim.rpg.model.sirokuro.charactor
 
 import com.naosim.rpglib.model.value.Item
 import com.naosim.rpglib.model.value.ItemId

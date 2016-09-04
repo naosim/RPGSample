@@ -1,4 +1,4 @@
-package com.naosim.rpgmodel.sirokuro
+package com.naosim.rpg.model.sirokuro
 
 import android.util.Log
 import com.naosim.rpglib.model.GameMain
@@ -9,13 +9,13 @@ import com.naosim.rpglib.model.viewmodel.fieldviewmodel.FieldViewModel
 import com.naosim.rpglib.model.viewmodel.fieldviewmodel.FieldViewModelFactory
 import com.naosim.rpglib.model.viewmodel.sound.bgm.BGMPlayModel
 import com.naosim.rpglib.model.viewmodel.sound.se.SEPlayModel
-import com.naosim.rpgmodel.sirokuro.charactor.*
+import com.naosim.rpg.model.sirokuro.charactor.*
 import com.naosim.rpglib.model.gametool.DataSaveRepository
 import com.naosim.rpglib.model.gametool.GlobalCommonContainer
 import com.naosim.rpglib.model.gametool.GlobalContainer
-import com.naosim.rpgmodel.sirokuro.global.Status
-import com.naosim.rpgmodel.sirokuro.map.YagiFieldMap
-import com.naosim.rpgmodel.sirokuro.map.jump
+import com.naosim.rpg.model.sirokuro.global.Status
+import com.naosim.rpg.model.sirokuro.map.YagiFieldMap
+import com.naosim.rpg.model.sirokuro.map.jump
 
 class SirokuroGame(
         private val fieldViewModelFactory: FieldViewModelFactory<FieldViewModel>,

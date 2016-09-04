@@ -1,4 +1,4 @@
-package com.naosim.rpgmodel.sirokuro
+package com.naosim.rpg.model.sirokuro
 
 import com.naosim.rpglib.model.viewmodel.sound.bgm.BGM
 import com.naosim.rpglib.model.viewmodel.sound.bgm.HasBGM

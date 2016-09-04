@@ -1,8 +1,8 @@
-package com.naosim.rpgmodel.sirokuro.charactor
+package com.naosim.rpg.model.sirokuro.charactor
 
 import com.naosim.rpglib.model.gametool.GlobalContainer
 import com.naosim.rpglib.model.script.ScriptUtil
-import com.naosim.rpgmodel.sirokuro.global.Status
+import com.naosim.rpg.model.sirokuro.global.Status
 
 class Player(globalContainer: GlobalContainer<Status, GameItem>): EventableObjectCommon(globalContainer) {
     override fun check() {

@@ -1,10 +1,10 @@
-package com.naosim.rpgmodel.sirokuro.map
+package com.naosim.rpg.model.sirokuro.map
 
 import com.naosim.rpglib.model.value.field.Position
 import com.naosim.rpglib.model.viewmodel.fieldviewmodel.FieldViewModel
 import com.naosim.rpglib.model.viewmodel.sound.bgm.BGMPlayModel
 import com.naosim.rpglib.model.viewmodel.sound.se.SEPlayModel
-import com.naosim.rpgmodel.sirokuro.SirokuroSE
+import com.naosim.rpg.model.sirokuro.SirokuroSE
 
 class FieldLink(val position1: Position, val position2: Position)
 

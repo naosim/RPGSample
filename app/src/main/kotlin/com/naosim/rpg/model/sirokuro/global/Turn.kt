@@ -1,4 +1,4 @@
-package com.naosim.rpgmodel.sirokuro.global
+package com.naosim.rpg.model.sirokuro.global
 
 import com.naosim.rpglib.model.value.Value
 import com.naosim.rpglib.model.value.ValueUpdater
@@ -15,11 +15,11 @@ class TurnValueUpdater(turn: Turn = Turn.kuro_eat) : ValueUpdater<Turn, TurnValu
         setValue(Turn.values()[(getValue().ordinal + 1) % Turn.values().size])
     }
 
-    override fun invoke() {
-        registerManager.invoke(this)
-    }
-
     fun getValueString(): String {
         return getValue().value
+    }
+
+    override fun getThis(): TurnValue {
+        return this
     }
 }

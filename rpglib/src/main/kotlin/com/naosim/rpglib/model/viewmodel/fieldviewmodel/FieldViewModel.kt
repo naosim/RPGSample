@@ -21,10 +21,19 @@ interface FieldViewModel {
         updateField(field)
         gotoPosition(Position(field.fieldName, x, y))
     }
+
+    fun updateFieldAndGo(fieldAndPosition: FieldAndPosition) {
+        updateField(fieldAndPosition.field)
+        gotoPosition(fieldAndPosition.position)
+    }
 }
 
 interface FieldViewModelWithCall<I>: FieldViewModel, Caller<I>
 
 interface Caller<I> {
     fun call(input: I, callback: (I) -> Unit = {})
+}
+
+class FieldAndPosition(val field: Field, x: X, y: Y) {
+    val position = Position(field.fieldName, x, y)
 }

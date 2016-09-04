@@ -1,15 +1,15 @@
-package com.naosim.rpgmodel.sirokuro.charactor
+package com.naosim.rpg.model.sirokuro.charactor
 
 import com.naosim.rpglib.model.gametool.GlobalContainer
-import com.naosim.rpgmodel.sirokuro.global.Status
-import com.naosim.rpgmodel.sirokuro.global.Turn
+import com.naosim.rpg.model.sirokuro.global.Status
+import com.naosim.rpg.model.sirokuro.global.Turn
 
-class KuroYagi(globalContainer: GlobalContainer<Status, GameItem>): EventableObjectCommon(globalContainer) {
+class SiroYagi(globalContainer: GlobalContainer<Status, GameItem>): EventableObjectCommon(globalContainer) {
     override fun check() {
-        val self = "黒ヤギ"
-        val other = "白ヤギ"
+        val self = "白ヤギ"
+        val other = "黒ヤギ"
         when(globalContainer.status.turnValue.getValue()) {
-            Turn.kuro_eat -> {
+            Turn.siro_eat -> {
                 scriptUtil.script(
                         """
                         ${self}「やあ。」[r]
@@ -20,13 +20,13 @@ class KuroYagi(globalContainer: GlobalContainer<Status, GameItem>): EventableObj
                         ${other}さんへの手紙を受け取った
                         """,
                         {
-                            globalContainer.itemSet.add(GameItem.くろやぎさんの手紙)
+                            globalContainer.itemSet.add(GameItem.しろやぎさんの手紙)
                             globalContainer.status.turnValue.next()
                         }
                 )
             }
 
-            Turn.kuro_write -> {
+            Turn.siro_write -> {
                 scriptUtil.script(
                         """
                         ${self}「手紙、渡してね。頼むよ。[r]
@@ -35,15 +35,17 @@ class KuroYagi(globalContainer: GlobalContainer<Status, GameItem>): EventableObj
                 )
             }
 
-            Turn.siro_eat -> {
+            Turn.kuro_eat -> {
                 scriptUtil.script(
                         """
-                        ${self}「渡してくれてありがとう！」
+                        ${self}「渡してくれてありがとう！[r]
+                        おれいにやくそうをあげるよ
+                        」
                         """
-                )
+                ,{globalContainer.itemSet.add(GameItem.やくそう)})
             }
 
-            Turn.siro_write -> {
+            Turn.kuro_write -> {
                 scriptUtil.script(
                         """
                         ${self}「${other}さんからお手紙？
@@ -51,7 +53,7 @@ class KuroYagi(globalContainer: GlobalContainer<Status, GameItem>): EventableObj
                         それにしてもお腹すいたなぁ」
                         """,
                         {
-                            globalContainer.itemSet.remove(GameItem.しろやぎさんの手紙)
+                            globalContainer.itemSet.remove(GameItem.くろやぎさんの手紙)
                             globalContainer.status.turnValue.next()
                         }
                 )
@@ -60,7 +62,7 @@ class KuroYagi(globalContainer: GlobalContainer<Status, GameItem>): EventableObj
     }
 
     override fun useItem(item: GameItem): Boolean {
-        if(item == GameItem.しろやぎさんの手紙) {
+        if(item == GameItem.くろやぎさんの手紙) {
             check()
             return true
         }

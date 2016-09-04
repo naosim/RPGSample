@@ -25,13 +25,25 @@ open abstract class ValueUpdater<T, THIZ>(private var v: T): Value<T, THIZ> {
     }
 
     fun setValue(v: T) {
-        this.v = v
+        if(this.v != v) {
+            this.v = v
+            invoke()
+        }
     }
 
-    abstract fun invoke()
+    fun invoke() {
+        registerManager.invoke(getThis())
+    }
+
+    abstract fun getThis(): THIZ
+
+
 }
 interface CountValue: Value<Int, CountValue>
 class CountValueUpdater(v: Int): ValueUpdater<Int, CountValue>(v), CountValue {
+    override fun getThis(): CountValue {
+        return this
+    }
 
     fun increment(countUpValue: Int = 1) {
         setValue(getValue() + countUpValue)
@@ -39,9 +51,5 @@ class CountValueUpdater(v: Int): ValueUpdater<Int, CountValue>(v), CountValue {
 
     fun decrement(countDownValue: Int = 1) {
         setValue(getValue() + Math.abs(countDownValue))
-    }
-
-    override fun invoke() {
-        registerManager.invoke(this)
     }
 }

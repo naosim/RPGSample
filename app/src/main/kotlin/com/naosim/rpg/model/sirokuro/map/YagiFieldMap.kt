@@ -1,8 +1,8 @@
-package com.naosim.rpgmodel.sirokuro.map
+package com.naosim.rpg.model.sirokuro.map
 
 import com.naosim.rpglib.model.value.field.*
-import com.naosim.rpgmodel.sirokuro.SirokuroBGM
-import com.naosim.rpgmodel.sirokuro.charactor.EventTargetType
+import com.naosim.rpg.model.sirokuro.SirokuroBGM
+import com.naosim.rpg.model.sirokuro.charactor.EventTargetType
 import java.util.*
 
 enum class YagiFieldName: FieldName {

@@ -1,4 +1,4 @@
-package com.naosim.rpgmodel.sirokuro
+package com.naosim.rpg.model.sirokuro
 
 import com.naosim.rpglib.model.viewmodel.sound.se.HasSE
 import com.naosim.rpglib.model.viewmodel.sound.se.SE

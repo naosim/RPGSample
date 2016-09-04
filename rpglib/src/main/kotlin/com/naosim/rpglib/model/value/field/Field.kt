@@ -1,5 +1,6 @@
 package com.naosim.rpglib.model.value.field
 
+import com.naosim.rpglib.model.value.ValueImutable
 import com.naosim.rpglib.model.viewmodel.sound.bgm.HasBGM
 
 open class Field(
@@ -18,4 +19,31 @@ open class Field(
     } else {
         null
     }
+
+    fun getBackFieldValue(position: Position): BackFieldValue {
+        if(position.fieldName.value != fieldName.value) {
+            throw RuntimeException("フィールド名が違います")
+        }
+        return BackFieldValue(backFieldLayer.fieldData.getPositionValue(position.x, position.y))
+    }
+
+    fun getFrontFieldValue(position: Position): FrontFieldValue? {
+        if(position.fieldName.value != fieldName.value) {
+            throw RuntimeException("フィールド名が違います")
+        }
+        return frontFieldLayer?.let { FrontFieldValue(it.fieldData.getPositionValue(position.x, position.y)) }
+    }
+
+    fun getUpperFieldValue(position: Position): FieldValue {
+        val result = getFrontFieldValue(position)
+        if(result != null && result.value > 0) {
+            return result
+        }
+
+        return getBackFieldValue(position);
+    }
 }
+
+open class FieldValue(override val value: Int): ValueImutable<Int>
+class BackFieldValue(fieldValue: FieldValue): FieldValue(fieldValue.value)
+class FrontFieldValue(fieldValue: FieldValue): FieldValue(fieldValue.value)

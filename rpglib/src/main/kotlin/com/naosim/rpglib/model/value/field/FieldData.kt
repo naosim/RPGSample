@@ -3,8 +3,16 @@ package com.naosim.rpglib.model.value.field
 import com.naosim.rpglib.model.value.ValueImutable
 import java.util.*
 
-class FieldData(override val value: List<List<Int>>) : ValueImutable<List<List<Int>>>
-class FieldCollisionData(override val value: List<List<Int>>) : ValueImutable<List<List<Int>>>
+class FieldData(override val value: List<List<Int>>) : ValueImutable<List<List<Int>>> {
+    fun getPositionValue(x: X, y: Y): FieldValue {
+        return FieldValue(value[y.value][x.value])
+    }
+}
+class FieldCollisionData(override val value: List<List<Int>>) : ValueImutable<List<List<Int>>> {
+    fun getPositionValue(x: X, y: Y): Int {
+        return value[y.value][x.value]
+    }
+}
 fun createFieldData(data: String): FieldData {
     val result = ArrayList<List<Int>>()
     data
