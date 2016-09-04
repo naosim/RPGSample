@@ -142,6 +142,7 @@ var MapGroup = function() {
     back: back,
     front: front,
     hitTest: function(x, y) {
+      return false // for debug
       return back.hitTest(x, y) || front.hitTest(x, y);
     },
       // event: new Map(16, 16),
