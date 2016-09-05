@@ -18,6 +18,11 @@ class MoguraB1FieldLogic(
 ): FieldAndFieldLogic<Item>, GetFieldAndPosition<MoguraB1Position> {
     init {
         glovalContainer.status.b1Switch.registerUpdate(this, {
+            if(it.getValue()) {
+                // 2, 7
+                field.frontFieldLayer?.let { it.fieldDataAndFieldCollisionData.set(X(2), Y(7), FieldValue(-1), 0) }
+                glovalContainer.fieldViewModel.updateField(field)
+            }
             Log.e(this@MoguraB1FieldLogic.javaClass.simpleName, it.getValue().toString())
         })
     }
