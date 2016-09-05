@@ -4,8 +4,7 @@ import android.content.SharedPreferences
 import com.naosim.rpg.model.mogura.B1Switch
 import com.naosim.rpg.model.mogura.MoguraItem
 import com.naosim.rpg.model.mogura.MoguraStatus
-import com.naosim.rpg.model.sirokuro.charactor.GameItem
-import com.naosim.rpg.model.sirokuro.map.YagiFieldName
+import com.naosim.rpg.model.mogura.map.MoguraFieldName
 import com.naosim.rpglib.model.gametool.DataSaveContainer
 import com.naosim.rpglib.model.gametool.DataSaveRepository
 import com.naosim.rpglib.model.value.ItemSet
@@ -17,7 +16,7 @@ import com.naosim.rpglib.model.value.field.Y
 class MoguraDataSaveRepositoryAndroidImpl(val sharedPreferences: SharedPreferences): DataSaveRepository<MoguraStatus, MoguraItem> {
     override fun load(): DataSaveContainer<MoguraStatus, MoguraItem> {
         val itemSet = ItemSet<MoguraItem>()
-        val itemCsv = sharedPreferences.getString("itemCsv", "${GameItem.やくそう.itemId.value}")
+//        val itemCsv = sharedPreferences.getString("itemCsv", "${GameItem.やくそう.itemId.value}")
 
 //        itemCsv
 //                .split(",")
@@ -29,7 +28,7 @@ class MoguraDataSaveRepositoryAndroidImpl(val sharedPreferences: SharedPreferenc
 //        status.turnValue.setValue(Turn.valueOf(turnString))
 
         val position = Position(
-                FieldNameImpl(sharedPreferences.getString("fieldName", YagiFieldName.main.value)),
+                FieldNameImpl(sharedPreferences.getString("fieldName", MoguraFieldName.f1.value)),
                 X(sharedPreferences.getInt("x", 0)),
                 Y(sharedPreferences.getInt("y", 0))
         )
