@@ -25,7 +25,7 @@ class MoguraF1FieldLogic(
     }
 
     override fun check(positionAndDirection: PositionAndDirection) {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+//        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun useItem(positionAndDirection: PositionAndDirection, item: Item): Boolean {
