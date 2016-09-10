@@ -22,6 +22,10 @@ class ItemSet<I: Item>(): RegisterManagerPublic<ItemSet<I>> {
         registerManager.invoke(this)
     }
 
+    fun has(item: I): Boolean {
+        return list.filter { it.itemId.value == item.itemId.value }.isNotEmpty()
+    }
+
     fun remove(targetItem: I) {
         var sameItem: Item? = null
         var sameTypeItem: Item? = null
