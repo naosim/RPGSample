@@ -1,6 +1,7 @@
 package com.naosim.rpglib.model.value.field
 
-class Position(val fieldName: FieldName, val x: X, val y: Y) {
+
+open class Position(val fieldName: FieldName, val x: X, val y: Y) {
     fun isSame(fieldName: FieldName, x: X, y: Y): Boolean {
         return isSame(Position(fieldName, x, y))
     }
