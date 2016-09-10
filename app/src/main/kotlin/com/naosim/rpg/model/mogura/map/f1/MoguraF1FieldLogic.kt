@@ -15,6 +15,9 @@ class MoguraF1FieldLogic(
         override val field: Field,
         val eventCallback: (MoguraMapEvent)->Unit
 ): FieldAndFieldLogic<Item>, GetFieldAndPosition<MoguraF1Position> {
+    val moguraF1ScenarioExecuter = MoguraF1ScenarioExecuter(glovalContainer)
+
+
     override fun onUpdatePositionAndDirection(positionAndDirection: PositionAndDirection): Boolean {
         val fieldValue = field.getUpperFieldValue(positionAndDirection.position)
         if(MapTip.下り階段.eq(fieldValue)) {
@@ -25,6 +28,11 @@ class MoguraF1FieldLogic(
     }
 
     override fun check(positionAndDirection: PositionAndDirection) {
+        val fieldValue = field.getUpperFieldValue(positionAndDirection.getFrontPosition())
+        if(MapTip.テーブル.eq(fieldValue)) {
+            moguraF1ScenarioExecuter.run(MoguraF1Scenario.テーブル)
+
+        }
 //        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
