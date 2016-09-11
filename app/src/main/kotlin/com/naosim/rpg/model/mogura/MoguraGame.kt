@@ -31,6 +31,7 @@ class MoguraGame(
     val globalContainer: MoguraGlobalContainer
     val moguraFieldMap: MoguraFieldMap
     val eventCallback: (MoguraMapEvent)->Unit = { handleEvent(it) }
+    val player: MoguraPlayer
     init {
 
         this.fieldViewModel = fieldViewModelFactory.create(
@@ -54,6 +55,7 @@ class MoguraGame(
                         sePlayModel
                 )
         )
+        this.player = MoguraPlayer(globalContainer)
 
         this.moguraFieldMap = MoguraFieldMap(globalContainer, eventCallback)
 
@@ -82,14 +84,12 @@ class MoguraGame(
     override fun onItemUsed(item: Item) {
 //        val gameItem = getGameItem(item.itemId)
         fieldViewModel.getPositionAndDirection {
-            val isUsedItem: Boolean = false;
-//            val isUsedItem: Boolean = when(yagiFieldMap.getCheckEventTarget(it)) {
-//                EventTargetType.kuro -> kuro.useItem(gameItem)
-//                EventTargetType.siro -> siro.useItem(gameItem)
-//                else -> false
-//            }
+            var isUsedItem: Boolean = false;
+            fieldViewModel.getPositionAndDirection {
+                isUsedItem = moguraFieldMap.getFieldLogic(it.position.fieldName).useItem(it, item)
+            }
             if(!isUsedItem) {
-//                player.useItem(gameItem)
+                player.useItem(item)
             }
         }
     }
@@ -125,9 +125,6 @@ class MoguraGame(
         when(moguraMapEvent) {
             MoguraMapEvent.f1_move_to_b1 -> goto(moguraFieldMap.b1, MoguraB1Position.上り階段)
             MoguraMapEvent.b1_move_to_f1 -> goto(moguraFieldMap.f1, MoguraF1Position.下り階段)
-            MoguraMapEvent.b1_switch -> {
-                globalContainer.status.b1Switch.setValue(true)
-            }
         }
     }
 

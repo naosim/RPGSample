@@ -7,7 +7,9 @@ enum class MapTip(val value: Int) {
     コンクリ壁_正面(4),
     上り階段(13),
     下り階段(14),
-    テーブル(15);
+    テーブル(15),
+    看板(24)
+    ;
 
     fun eq(fieldValue: FieldValue): Boolean {
         return mapEq(fieldValue, this)

@@ -1,6 +1,8 @@
 package com.naosim.rpg.model.mogura.map.f1
 
 import com.naosim.rpg.model.mogura.MoguraGlobalContainer
+import com.naosim.rpg.model.mogura.MoguraItem
+import com.naosim.rpg.model.mogura.ScriptText
 import com.naosim.rpg.model.mogura.map.FieldAndFieldLogic
 import com.naosim.rpg.model.mogura.map.GetFieldAndPosition
 import com.naosim.rpg.model.mogura.map.MapTip
@@ -11,13 +13,10 @@ import com.naosim.rpglib.model.value.field.PositionAndDirection
 import com.naosim.rpglib.model.viewmodel.fieldviewmodel.FieldAndPosition
 
 class MoguraF1FieldLogic(
-        val glovalContainer: MoguraGlobalContainer,
+        val globalContainer: MoguraGlobalContainer,
         override val field: Field,
         val eventCallback: (MoguraMapEvent)->Unit
 ): FieldAndFieldLogic<Item>, GetFieldAndPosition<MoguraF1Position> {
-    val moguraF1ScenarioExecuter = MoguraF1ScenarioExecuter(glovalContainer)
-
-
     override fun onUpdatePositionAndDirection(positionAndDirection: PositionAndDirection): Boolean {
         val fieldValue = field.getUpperFieldValue(positionAndDirection.position)
         if(MapTip.下り階段.eq(fieldValue)) {
@@ -29,11 +28,16 @@ class MoguraF1FieldLogic(
 
     override fun check(positionAndDirection: PositionAndDirection) {
         val fieldValue = field.getUpperFieldValue(positionAndDirection.getFrontPosition())
-        if(MapTip.テーブル.eq(fieldValue)) {
-            moguraF1ScenarioExecuter.run(MoguraF1Scenario.テーブル)
 
+        if(MapTip.テーブル.eq(fieldValue)) {
+            if(globalContainer.notHaveItem(MoguraItem.父親のメモ)) {
+                globalContainer.scriptUtil.script(ScriptText.f1_table_find_letter) { globalContainer.itemSet.add(MoguraItem.父親のメモ) }
+            } else {
+                globalContainer.scriptUtil.script(ScriptText.f1_table_nothing)
+            }
+        } else if(MapTip.看板.eq(fieldValue)) {
+            globalContainer.scriptUtil.script(ScriptText.f1_看板)
         }
-//        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun useItem(positionAndDirection: PositionAndDirection, item: Item): Boolean {

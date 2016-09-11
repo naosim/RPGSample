@@ -142,7 +142,7 @@ var MapGroup = function() {
     back: back,
     front: front,
     hitTest: function(x, y) {
-      return false // for debug
+//      return false // for debug
       return back.hitTest(x, y) || front.hitTest(x, y);
     },
       // event: new Map(16, 16),
@@ -237,7 +237,7 @@ fromNative.onButtonUp = function(arrowButtonType) {
         .filter(function(v){ return v != 'up'; })
         .length;
       if(count == 0) {
-        // game.fps = 1;
+//         game.fps = 1;
         game.pause();
       }
     }, 3000);
@@ -256,6 +256,7 @@ var updateMapDraw = function() {
   if(!map[currentFieldName]) {
     return;
   }
+  game.resume();
   ['back', 'front'].forEach(function(fieldLayerName) {
     if(!map[currentFieldName][fieldLayerName]) {
       mapGroup[fieldLayerName].loadData([[]]);

@@ -1,6 +1,7 @@
 package com.naosim.rpglib.model.script
 
 import com.naosim.rpglib.model.value.Message
+import com.naosim.rpglib.model.value.ValueImutable
 
 class ScriptUtil(val scriptExecutor: ScriptExecutor) {
     fun script(scriptSetBuilder: ScriptSetBuilder) {
@@ -9,6 +10,10 @@ class ScriptUtil(val scriptExecutor: ScriptExecutor) {
 
     fun script(kirikiriScript: String, onEnd: () -> Unit = {}) {
         scriptExecutor.start(ScriptSetBuilder().messageScriptList(ss(kirikiriScript)).onEnd(onEnd).build())
+    }
+
+    fun script(hasKirikiriScript: HasKirikiriScript, onEnd: () -> Unit = {}) {
+        scriptExecutor.start(ScriptSetBuilder().messageScriptList(ss(hasKirikiriScript.kirikiriScript.value)).onEnd(onEnd).build())
     }
 }
 
@@ -20,4 +25,9 @@ fun ss(kirikiriScript: String): Array<MessageScript> {
             .map { Message(it) }
             .map{ SimpleMessageScript(it) }
             .toTypedArray()
+}
+
+class KirikiriScript(override val value: String) : ValueImutable<String>
+interface HasKirikiriScript {
+    val kirikiriScript: KirikiriScript
 }

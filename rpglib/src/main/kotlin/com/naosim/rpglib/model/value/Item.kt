@@ -5,6 +5,10 @@ import java.util.*
 interface Item {
     val itemId: ItemId
     val itemName: ItemName
+
+    fun eq(otherItem: Item): Boolean {
+        return this.itemId.value == otherItem.itemId.value
+    }
 }
 
 class ItemName(override val value: String): ValueImutable<String> {
