@@ -23,7 +23,10 @@ class MoguraDataSaveRepositoryAndroidImpl(val sharedPreferences: SharedPreferenc
                 .filter { it.trim().length > 0 }
                 .map { getMoguraItem(ItemId(it)) }
                 .forEach { itemSet.add(it) }
-        val status = MoguraStatus(B1Switch(sharedPreferences.getBoolean("b1Switch", false)))
+
+        val status = MoguraStatus(
+                B1Switch(sharedPreferences.getBoolean("b1Switch", false))
+        )
 //        val turnString = sharedPreferences.getString("turn", "kuro_eat")
 //        status.turnValue.setValue(Turn.valueOf(turnString))
 

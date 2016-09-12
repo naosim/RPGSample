@@ -8,21 +8,23 @@ import com.naosim.rpg.model.mogura.map.MapTip
 import com.naosim.rpg.model.mogura.map.MoguraMapEvent
 import com.naosim.rpg.model.mogura.map.f1.MoguraB1Position
 import com.naosim.rpglib.model.value.Item
-import com.naosim.rpglib.model.value.field.*
+import com.naosim.rpglib.model.value.field.PositionAndDirection
 import com.naosim.rpglib.model.viewmodel.fieldviewmodel.FieldAndPosition
 
 class MoguraB1FieldLogic(
         val globalContainer: MoguraGlobalContainer,
-        override var field: Field,
+        val moguraB1FieldFactory: MoguraB1FieldFactory,
         val eventCallback: (MoguraMapEvent)->Unit
 ): FieldAndFieldLogic<Item>, GetFieldAndPosition<MoguraB1Position> {
     val scriptUtil = globalContainer.scriptUtil
+    override var field = moguraB1FieldFactory.createField()
 
     init {
         globalContainer.status.b1Switch.registerUpdate(this, {
-            update()
             // スイッチが置かれたら道を開く
+            updateField()
 //            if(it.getValue()) {
+//                updateField()
 //                // 2, 7
 //                field.frontFieldLayer?.let { it.fieldDataAndFieldCollisionData.set(X(2), Y(7), FieldValue(-1), 0) }
 //                globalContainer.fieldViewModel.updateField(field)
@@ -31,13 +33,9 @@ class MoguraB1FieldLogic(
         })
     }
 
-    fun update() {
-        // スイッチが置かれたら道を開く
-        if(globalContainer.status.b1Switch.getValue()) {
-            // 2, 7
-            field.frontFieldLayer?.let { it.fieldDataAndFieldCollisionData.set(X(2), Y(7), FieldValue(-1), 0) }
-            globalContainer.fieldViewModel.updateField(field)
-        }
+    private fun updateField() {
+        field = moguraB1FieldFactory.createField()
+        globalContainer.fieldViewModel.updateField(field)
     }
 
     override fun onUpdatePositionAndDirection(positionAndDirection: PositionAndDirection): Boolean {

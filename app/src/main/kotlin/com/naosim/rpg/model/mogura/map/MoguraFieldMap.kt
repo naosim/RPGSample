@@ -2,7 +2,9 @@ package com.naosim.rpg.model.mogura.map
 
 import com.naosim.rpg.model.mogura.MoguraGlobalContainer
 import com.naosim.rpg.model.mogura.map.b1.MoguraB1FieldFactory
+import com.naosim.rpg.model.mogura.map.b1.MoguraB1FieldLogic
 import com.naosim.rpg.model.mogura.map.f1.MoguraF1FieldFactory
+import com.naosim.rpg.model.mogura.map.f1.MoguraF1FieldLogic
 import com.naosim.rpglib.model.value.Item
 import com.naosim.rpglib.model.value.field.Field
 import com.naosim.rpglib.model.value.field.FieldName
@@ -20,8 +22,8 @@ fun getMoguraFieldName(fieldName: FieldName): MoguraFieldName {
 }
 
 class MoguraFieldMap(val globalContainer: MoguraGlobalContainer, eventCallback: (MoguraMapEvent)->Unit) {
-    val f1 = MoguraF1FieldFactory(globalContainer).create(eventCallback)
-    val b1 = MoguraB1FieldFactory(globalContainer).create(eventCallback)
+    val f1 = MoguraF1FieldLogic(globalContainer, MoguraF1FieldFactory(globalContainer), eventCallback)
+    val b1 = MoguraB1FieldLogic(globalContainer, MoguraB1FieldFactory(globalContainer), eventCallback)
 
     fun getField(fieldName: FieldName): Field {
         return getFieldLogic(fieldName).field

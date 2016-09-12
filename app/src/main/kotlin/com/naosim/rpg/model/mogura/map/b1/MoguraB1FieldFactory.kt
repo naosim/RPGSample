@@ -2,11 +2,7 @@ package com.naosim.rpg.model.mogura.map.b1
 
 import com.naosim.rpg.model.mogura.MoguraGlobalContainer
 import com.naosim.rpg.model.mogura.map.MoguraFieldName
-import com.naosim.rpg.model.mogura.map.MoguraMapEvent
-import com.naosim.rpglib.model.value.field.Field
-import com.naosim.rpglib.model.value.field.FieldCollisionData
-import com.naosim.rpglib.model.value.field.FieldDataAndFieldCollisionData
-import com.naosim.rpglib.model.value.field.createFieldData
+import com.naosim.rpglib.model.value.field.*
 
 class MoguraB1FieldFactory(val globalContainer: MoguraGlobalContainer) {
     val backFieldData = createFieldData("""
@@ -38,47 +34,51 @@ class MoguraB1FieldFactory(val globalContainer: MoguraGlobalContainer) {
         return FieldCollisionData(list2d)
     }
 
+    fun createFrontFieldDataString(): String {
+        val w = if(globalContainer.status.b1Switch.getValue()) "-1" else "4"
+        return """
+-1,-1,  -1,-1,-1,-1,-1,-1,-1,-1,31,-1,-1,-1,-1,-1
+-1,-1,  -1,-1,-1,-1,-1,-1,-1,-1,31,-1,-1,-1, 9,-1
+-1,-1,  -1,-1,-1,-1,-1,-1,-1,-1,31,-1,-1,-1, 9,-1
+-1,-1,  -1,-1,-1,-1,-1,-1,-1,-1,31,-1,-1,-1, 9,-1
+-1,-1,  -1,-1,-1,-1,-1,-1,-1,-1,31,-1,-1,-1, 9,-1
+-1,-1,  -1,-1,-1,-1,-1,-1,-1,-1,31,-1,-1,-1, 9,-1
+-1,-1,  -1,-1,-1,-1,-1,13,-1,-1,31,-1,-1,-1, 9,-1
+-1,-1,${w},-1,-1,-1,-1,-1,-1,-1,31,-1,-1,-1, 9,-1
+-1,-1,  -1,-1,-1,-1,-1,-1,-1,-1,31,-1,-1,-1, 9,-1
+31,31,  31,31,31,31,31,31,31,31,31,-1,-1,-1, 9,-1
+-1,-1,  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 9,-1
+-1,-1,  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 9,-1
+-1,-1,  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+-1,-1,  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+-1,-1,  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+-1,-1,  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+    """
+    }
 
-
-    val frontFieldData = createFieldData("""
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,31,-1,-1,-1,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,31,-1,-1,-1, 9,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,31,-1,-1,-1, 9,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,31,-1,-1,-1, 9,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,31,-1,-1,-1, 9,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,31,-1,-1,-1, 9,-1
--1,-1,-1,-1,-1,-1,-1,13,-1,-1,31,-1,-1,-1, 9,-1
--1,-1, 4,-1,-1,-1,-1,-1,-1,-1,31,-1,-1,-1, 9,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,31,-1,-1,-1, 9,-1
-31,31,31,31,31,31,31,31,31,31,31,-1,-1,-1, 9,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 9,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 9,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
--1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
-    """)
+    fun createFrontFieldData(): FieldData {
+        return createFieldData(createFrontFieldDataString())
+    }
 
     fun createFrontCollisionData(): FieldCollisionData {
-        val list2d = frontFieldData.value.map { row -> row.map { cell ->
+        val list2d = createFrontFieldData().value.map { row -> row.map { cell ->
             0
         }.toMutableList() }
         return FieldCollisionData(list2d)
     }
 
-    fun create(eventCallback: (MoguraMapEvent)->Unit): MoguraB1FieldLogic {
-        val field = Field(
+    fun createField(): Field {
+        return Field(
                 MoguraFieldName.b1,
                 FieldDataAndFieldCollisionData(
                         backFieldData,
                         createBackCollisionData()
                 ),
                 FieldDataAndFieldCollisionData(
-                        frontFieldData,
+                        createFrontFieldData(),
                         createFrontCollisionData()
                 )
         )
-        return MoguraB1FieldLogic(globalContainer, field, eventCallback)
     }
 }
 

@@ -2,7 +2,6 @@ package com.naosim.rpg.model.mogura.map.f1
 
 import com.naosim.rpg.model.mogura.MoguraGlobalContainer
 import com.naosim.rpg.model.mogura.map.MoguraFieldName
-import com.naosim.rpg.model.mogura.map.MoguraMapEvent
 import com.naosim.rpglib.model.value.field.Field
 import com.naosim.rpglib.model.value.field.FieldCollisionData
 import com.naosim.rpglib.model.value.field.FieldDataAndFieldCollisionData
@@ -66,8 +65,8 @@ class MoguraF1FieldFactory(val globalContainer: MoguraGlobalContainer) {
         return FieldCollisionData(list2d)
     }
 
-    fun create(eventCallback: (MoguraMapEvent)->Unit): MoguraF1FieldLogic {
-        val field = Field(
+    fun createField(): Field {
+        return Field(
                 MoguraFieldName.f1,
                 FieldDataAndFieldCollisionData(
                         backFieldData,
@@ -78,7 +77,6 @@ class MoguraF1FieldFactory(val globalContainer: MoguraGlobalContainer) {
                         createFrontCollisionData()
                 )
         )
-        return MoguraF1FieldLogic(globalContainer, field, eventCallback)
     }
 }
 

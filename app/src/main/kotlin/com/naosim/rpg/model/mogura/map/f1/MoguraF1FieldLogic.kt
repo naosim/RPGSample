@@ -8,15 +8,16 @@ import com.naosim.rpg.model.mogura.map.GetFieldAndPosition
 import com.naosim.rpg.model.mogura.map.MapTip
 import com.naosim.rpg.model.mogura.map.MoguraMapEvent
 import com.naosim.rpglib.model.value.Item
-import com.naosim.rpglib.model.value.field.Field
 import com.naosim.rpglib.model.value.field.PositionAndDirection
 import com.naosim.rpglib.model.viewmodel.fieldviewmodel.FieldAndPosition
 
 class MoguraF1FieldLogic(
         val globalContainer: MoguraGlobalContainer,
-        override val field: Field,
+        val moguraF1FieldFactory: MoguraF1FieldFactory,
         val eventCallback: (MoguraMapEvent)->Unit
 ): FieldAndFieldLogic<Item>, GetFieldAndPosition<MoguraF1Position> {
+    override var field = moguraF1FieldFactory.createField()
+
     override fun onUpdatePositionAndDirection(positionAndDirection: PositionAndDirection): Boolean {
         val fieldValue = field.getUpperFieldValue(positionAndDirection.position)
         if(MapTip.下り階段.eq(fieldValue)) {
