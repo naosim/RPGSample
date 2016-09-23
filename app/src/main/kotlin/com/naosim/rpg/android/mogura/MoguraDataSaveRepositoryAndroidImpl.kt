@@ -1,10 +1,7 @@
 package com.naosim.rpg.android.mogura
 
 import android.content.SharedPreferences
-import com.naosim.rpg.model.mogura.B1Switch
-import com.naosim.rpg.model.mogura.MoguraItem
-import com.naosim.rpg.model.mogura.MoguraStatus
-import com.naosim.rpg.model.mogura.getMoguraItem
+import com.naosim.rpg.model.mogura.*
 import com.naosim.rpg.model.mogura.map.MoguraFieldName
 import com.naosim.rpglib.model.gametool.DataSaveContainer
 import com.naosim.rpglib.model.gametool.DataSaveRepository
@@ -25,7 +22,8 @@ class MoguraDataSaveRepositoryAndroidImpl(val sharedPreferences: SharedPreferenc
                 .forEach { itemSet.add(it) }
 
         val status = MoguraStatus(
-                B1Switch(sharedPreferences.getBoolean("b1Switch", false))
+                B1Switch(sharedPreferences.getBoolean("b1Switch", false)),
+                Earthquake(sharedPreferences.getBoolean("earthquake", false))
         )
 //        val turnString = sharedPreferences.getString("turn", "kuro_eat")
 //        status.turnValue.setValue(Turn.valueOf(turnString))

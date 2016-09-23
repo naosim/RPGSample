@@ -44,6 +44,10 @@ class MoguraB1FieldLogic(
             eventCallback.invoke(MoguraMapEvent.b1_move_to_f1)
             return true
         }
+        if(MapTip.下り階段.eq(fieldValue)) {
+            eventCallback.invoke(MoguraMapEvent.b1_move_to_b2)
+            return true
+        }
         return false
     }
 

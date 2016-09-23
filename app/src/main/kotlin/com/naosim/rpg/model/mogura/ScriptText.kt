@@ -44,6 +44,13 @@ enum class ScriptText(val value: String): HasKirikiriScript {
             壁に通り道ができた
             """
     ),
+    b2_neko_before_eathquake(
+            """
+            おや
+            君が来るなんてめずらしいね
+            """
+    ),
+
     ;
 
     override val kirikiriScript = KirikiriScript(value)
