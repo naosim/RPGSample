@@ -4,7 +4,7 @@ import android.util.Log
 import com.naosim.rpg.model.mogura.map.GetFieldAndPosition
 import com.naosim.rpg.model.mogura.map.HasPosition
 import com.naosim.rpg.model.mogura.map.MoguraFieldMap
-import com.naosim.rpg.model.mogura.map.MoguraMapEvent
+import com.naosim.rpg.model.mogura.map.MoguraMapMoveEvent
 import com.naosim.rpg.model.mogura.map.f1.MoguraB1Position
 import com.naosim.rpg.model.mogura.map.f1.MoguraF1Position
 import com.naosim.rpg.model.mogura.map.f2.MoguraB2Position
@@ -32,7 +32,7 @@ class MoguraGame(
     var isJump = false;
     val globalContainer: MoguraGlobalContainer
     val moguraFieldMap: MoguraFieldMap
-    val eventCallback: (MoguraMapEvent)->Unit = { handleEvent(it) }
+    val eventCallback: (MoguraMapMoveEvent)->Unit = { handleEvent(it) }
     val player: MoguraPlayer
     init {
 
@@ -123,13 +123,13 @@ class MoguraGame(
         return globalContainer.itemSet.list
     }
 
-    fun handleEvent(moguraMapEvent: MoguraMapEvent) {
-        when(moguraMapEvent) {
-            MoguraMapEvent.f1_move_to_b1 -> goto(moguraFieldMap.b1, MoguraB1Position.上り階段)
-            MoguraMapEvent.b1_move_to_f1 -> goto(moguraFieldMap.f1, MoguraF1Position.下り階段)
-            MoguraMapEvent.b1_move_to_b2 -> goto(moguraFieldMap.b2, MoguraB2Position.上り階段_in_house)
-            MoguraMapEvent.b2_move_to_b1_in_house -> goto(moguraFieldMap.b1, MoguraB1Position.下り階段)
-            MoguraMapEvent.b2_move_to_b3_in_house -> goto(moguraFieldMap.b3, MoguraB3Position.上り階段_in_house)
+    fun handleEvent(moguraMapMoveEvent: MoguraMapMoveEvent) {
+        when(moguraMapMoveEvent) {
+            MoguraMapMoveEvent.f1_move_to_b1 -> goto(moguraFieldMap.b1, MoguraB1Position.上り階段)
+            MoguraMapMoveEvent.b1_move_to_f1 -> goto(moguraFieldMap.f1, MoguraF1Position.下り階段)
+            MoguraMapMoveEvent.b1_move_to_b2 -> goto(moguraFieldMap.b2, MoguraB2Position.上り階段_in_house)
+            MoguraMapMoveEvent.b2_move_to_b1_in_house -> goto(moguraFieldMap.b1, MoguraB1Position.下り階段)
+            MoguraMapMoveEvent.b2_move_to_b3_in_house -> goto(moguraFieldMap.b3, MoguraB3Position.上り階段_in_house)
         }
     }
 

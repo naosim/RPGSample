@@ -25,7 +25,7 @@ fun getMoguraFieldName(fieldName: FieldName): MoguraFieldName {
     return MoguraFieldName.valueOf(fieldName.value)
 }
 
-class MoguraFieldMap(val globalContainer: MoguraGlobalContainer, eventCallback: (MoguraMapEvent)->Unit) {
+class MoguraFieldMap(val globalContainer: MoguraGlobalContainer, eventCallback: (MoguraMapMoveEvent)->Unit) {
     val f1 = MoguraF1FieldLogic(globalContainer, MoguraF1FieldFactory(globalContainer), eventCallback)
     val b1 = MoguraB1FieldLogic(globalContainer, MoguraB1FieldFactory(globalContainer), eventCallback)
     val b2 = MoguraB2FieldLogic(globalContainer, MoguraB2FieldFactory(globalContainer), eventCallback)

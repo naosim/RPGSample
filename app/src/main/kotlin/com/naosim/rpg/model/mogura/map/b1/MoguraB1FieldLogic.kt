@@ -5,7 +5,7 @@ import com.naosim.rpg.model.mogura.ScriptText
 import com.naosim.rpg.model.mogura.map.FieldAndFieldLogic
 import com.naosim.rpg.model.mogura.map.GetFieldAndPosition
 import com.naosim.rpg.model.mogura.map.MapTip
-import com.naosim.rpg.model.mogura.map.MoguraMapEvent
+import com.naosim.rpg.model.mogura.map.MoguraMapMoveEvent
 import com.naosim.rpg.model.mogura.map.f1.MoguraB1Position
 import com.naosim.rpglib.model.value.Item
 import com.naosim.rpglib.model.value.field.PositionAndDirection
@@ -14,7 +14,7 @@ import com.naosim.rpglib.model.viewmodel.fieldviewmodel.FieldAndPosition
 class MoguraB1FieldLogic(
         val globalContainer: MoguraGlobalContainer,
         val moguraB1FieldFactory: MoguraB1FieldFactory,
-        val eventCallback: (MoguraMapEvent)->Unit
+        val eventCallback: (MoguraMapMoveEvent)->Unit
 ): FieldAndFieldLogic<Item>, GetFieldAndPosition<MoguraB1Position> {
     val scriptUtil = globalContainer.scriptUtil
     override var field = moguraB1FieldFactory.createField()
@@ -41,11 +41,11 @@ class MoguraB1FieldLogic(
     override fun onUpdatePositionAndDirection(positionAndDirection: PositionAndDirection): Boolean {
         val fieldValue = field.getUpperFieldValue(positionAndDirection.position)
         if(MapTip.上り階段.eq(fieldValue)) {
-            eventCallback.invoke(MoguraMapEvent.b1_move_to_f1)
+            eventCallback.invoke(MoguraMapMoveEvent.b1_move_to_f1)
             return true
         }
         if(MapTip.下り階段.eq(fieldValue)) {
-            eventCallback.invoke(MoguraMapEvent.b1_move_to_b2)
+            eventCallback.invoke(MoguraMapMoveEvent.b1_move_to_b2)
             return true
         }
         return false

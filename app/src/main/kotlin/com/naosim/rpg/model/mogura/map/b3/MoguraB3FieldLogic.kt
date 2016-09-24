@@ -3,7 +3,7 @@ package com.naosim.rpg.model.mogura.map.b2
 import com.naosim.rpg.model.mogura.MoguraGlobalContainer
 import com.naosim.rpg.model.mogura.map.FieldAndFieldLogic
 import com.naosim.rpg.model.mogura.map.GetFieldAndPosition
-import com.naosim.rpg.model.mogura.map.MoguraMapEvent
+import com.naosim.rpg.model.mogura.map.MoguraMapMoveEvent
 import com.naosim.rpg.model.mogura.map.f2.MoguraB3Position
 import com.naosim.rpglib.model.value.Item
 import com.naosim.rpglib.model.value.field.PositionAndDirection
@@ -12,7 +12,7 @@ import com.naosim.rpglib.model.viewmodel.fieldviewmodel.FieldAndPosition
 class MoguraB3FieldLogic(
         val globalContainer: MoguraGlobalContainer,
         val fieldFactory: MoguraB3FieldFactory,
-        val eventCallback: (MoguraMapEvent)->Unit
+        val eventCallback: (MoguraMapMoveEvent)->Unit
 ): FieldAndFieldLogic<Item>, GetFieldAndPosition<MoguraB3Position> {
     val scriptUtil = globalContainer.scriptUtil
     override var field = fieldFactory.createField()
