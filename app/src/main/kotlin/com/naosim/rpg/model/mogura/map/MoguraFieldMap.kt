@@ -12,6 +12,7 @@ import com.naosim.rpg.model.mogura.map.f1.MoguraF1FieldLogic
 import com.naosim.rpglib.model.value.Item
 import com.naosim.rpglib.model.value.field.Field
 import com.naosim.rpglib.model.value.field.FieldName
+import com.naosim.rpglib.model.viewmodel.fieldviewmodel.FieldAndPosition
 
 enum class MoguraFieldName(): FieldName {
     f1,
@@ -33,6 +34,18 @@ class MoguraFieldMap(val globalContainer: MoguraGlobalContainer, eventCallback: 
 
     fun getField(fieldName: FieldName): Field {
         return getFieldLogic(fieldName).field
+    }
+
+    fun getFieldAndPosition(mapMoveEvent: MoguraMapMoveEvent): FieldAndPosition {
+        val field = when(mapMoveEvent.fieldName) {
+            MoguraFieldName.f1 -> this.f1.field
+            MoguraFieldName.b1 -> this.b1.field
+            MoguraFieldName.b2 -> this.b2.field
+            MoguraFieldName.b3 -> this.b3.field
+            else -> this.f1.field
+        }
+
+        return FieldAndPosition(field, mapMoveEvent.position.x, mapMoveEvent.position.y)
     }
 
     fun getFieldLogic(fieldName: FieldName): FieldAndFieldLogic<Item> {

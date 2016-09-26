@@ -1,14 +1,8 @@
 package com.naosim.rpg.model.mogura
 
 import android.util.Log
-import com.naosim.rpg.model.mogura.map.GetFieldAndPosition
-import com.naosim.rpg.model.mogura.map.HasPosition
 import com.naosim.rpg.model.mogura.map.MoguraFieldMap
 import com.naosim.rpg.model.mogura.map.MoguraMapMoveEvent
-import com.naosim.rpg.model.mogura.map.f1.MoguraB1Position
-import com.naosim.rpg.model.mogura.map.f1.MoguraF1Position
-import com.naosim.rpg.model.mogura.map.f2.MoguraB2Position
-import com.naosim.rpg.model.mogura.map.f2.MoguraB3Position
 import com.naosim.rpglib.model.GameMain
 import com.naosim.rpglib.model.gametool.DataSaveRepository
 import com.naosim.rpglib.model.gametool.GlobalCommonContainer
@@ -124,18 +118,6 @@ class MoguraGame(
     }
 
     fun handleEvent(moguraMapMoveEvent: MoguraMapMoveEvent) {
-        when(moguraMapMoveEvent) {
-            MoguraMapMoveEvent.f1_move_to_b1 -> goto(moguraFieldMap.b1, MoguraB1Position.上り階段)
-            MoguraMapMoveEvent.b1_move_to_f1 -> goto(moguraFieldMap.f1, MoguraF1Position.下り階段)
-            MoguraMapMoveEvent.b1_move_to_b2 -> goto(moguraFieldMap.b2, MoguraB2Position.上り階段_in_house)
-            MoguraMapMoveEvent.b2_move_to_b1_in_house -> goto(moguraFieldMap.b1, MoguraB1Position.下り階段)
-            MoguraMapMoveEvent.b2_move_to_b3_in_house -> goto(moguraFieldMap.b3, MoguraB3Position.上り階段_in_house)
-        }
+        fieldViewModel.updateFieldAndGo(moguraFieldMap.getFieldAndPosition(moguraMapMoveEvent))
     }
-
-    fun <T: HasPosition> goto(map: GetFieldAndPosition<T>, t: T) {
-        fieldViewModel.updateFieldAndGo(map.getFieldAndPosition(t))
-    }
-
-
 }
